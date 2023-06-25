@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/controller/cubit/navigation_screens_cubit/navigation_screen_cubit.dart';
 import 'package:job_finder/controller/cubit/onboarding_screen_cubit/onboard_screen_cubit.dart';
-import '../views/onboarding_screens/splash_screen.dart';
+
+import '../controller/cubit/signup_screens_cubit/signup_screens_cubit.dart';
+import '../views/screens/create_account_screens/work_preferred_location_screen.dart';
 
 class Root extends StatelessWidget {
   const Root({super.key});
@@ -16,12 +18,20 @@ class Root extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => NavigationScreenCubit(),
-        )
+        ),
+        BlocProvider(
+          create: (context) => SignupScreenCubit(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData.light(useMaterial3: true),
-        home: const Splash(),
+        theme: ThemeData.light(useMaterial3: true).copyWith(
+          textTheme: const TextTheme().apply(
+            displayColor: const Color.fromRGBO(17, 24, 39, 1),
+            bodyColor: const Color.fromRGBO(17, 24, 39, 1),
+          ),
+        ),
+        home: const PreferedWorkLocationScreen(), // SignUp, SplashScreen
       ),
     );
   }

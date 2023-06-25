@@ -1,12 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:job_finder/views/onboarding_screens/second_onboard_screen.dart';
-import 'package:job_finder/views/onboarding_screens/third_onboard_screen.dart';
-import '../../controller/cubit/onboarding_screen_cubit/onboard_screen_cubit.dart';
+import 'package:job_finder/views/screens/onboarding_screens/second_onboard_screen.dart';
+import 'package:job_finder/views/screens/onboarding_screens/third_onboard_screen.dart';
+
+import '../../../controller/cubit/onboarding_screen_cubit/onboard_screen_cubit.dart';
 import '../home_screen_and_search/main_screen.dart';
-import '../widgets/onboarding_screen_widgets/custom_button.dart';
-import '../widgets/onboarding_screen_widgets/top_title_onborading_screens.dart';
+import '../../widgets/onboarding_screen_widgets/custom_button.dart';
+import '../../widgets/onboarding_screen_widgets/top_title_onborading_screens.dart';
 import 'first_onboard_screen.dart';
 
 class OnBoradingScreen extends StatefulWidget {
@@ -71,25 +72,28 @@ class _FirstOnBoradingScreenState extends State<OnBoradingScreen> {
             },
           ),
           Container(
+            width: double.infinity,
             margin: const EdgeInsets.all(20),
             child: BlocBuilder<OnBoardScreenCubit, int>(
               builder: (context, state) {
                 return CustomButton(
-                    onPressed: () {
-                      if (state == 2) {
-                        // step 3: move to Home Page if current index is the last
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MainScreen(),
-                            ),
-                            (route) => false);
-                      }
-                      // step 1: move to next page
-                      _carouselController.nextPage();
-                    },
-                    // step 2: change the text of button
-                    text: state != 2 ? 'Next' : 'Get Started');
+                  onPressed: () {
+                    if (state == 2) {
+                      // step 3: move to Home Page if current index is the last
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MainScreen(),
+                          ),
+                          (route) => false);
+                    }
+                    // step 1: move to next page
+                    _carouselController.nextPage();
+                  },
+                  // step 2: change the text of button
+                  text: state != 2 ? 'Next' : 'Get Started',
+                  fontSize: 20,
+                );
               },
             ),
           ),

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_finder/controller/cubit/navigation_screens_cubit/navigation_screen_cubit.dart';
-import 'package:job_finder/views/home_screen_and_search/applied_screen.dart';
-import 'package:job_finder/views/home_screen_and_search/messages_screen.dart';
-import 'package:job_finder/views/home_screen_and_search/profile_screen.dart';
-import 'package:job_finder/views/home_screen_and_search/saved_screen.dart';
+import 'package:job_finder/views/screens/home_screen_and_search/applied_screen.dart';
+import 'package:job_finder/views/screens/home_screen_and_search/messages_screen.dart';
+import 'package:job_finder/views/screens/home_screen_and_search/profile_screen.dart';
+import 'package:job_finder/views/screens/home_screen_and_search/saved_screen.dart';
 import 'home_screen.dart';
 
 class MainScreen extends StatefulWidget {

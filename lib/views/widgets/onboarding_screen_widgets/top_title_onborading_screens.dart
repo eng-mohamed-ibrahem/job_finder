@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../home_screen_and_search/main_screen.dart';
+import '../../screens/home_screen_and_search/main_screen.dart';
 
 class TopTitleOnBoardingScreen extends StatelessWidget {
   const TopTitleOnBoardingScreen({super.key});
