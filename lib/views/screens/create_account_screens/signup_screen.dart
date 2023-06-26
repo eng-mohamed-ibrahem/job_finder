@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/controller/cubit/signup_screens_cubit/signup_screens_cubit.dart';
 import 'package:job_finder/views/screens/create_account_screens/setup_work_type_screen.dart';
 import 'package:job_finder/views/widgets/onboarding_screen_widgets/custom_button.dart';
-
 import '../../../controller/utils/validation.dart';
 import '../../widgets/signup_screen_widget/customized_text_field.dart';
 

@@ -12,7 +12,7 @@ class WorkTypeSelectedCubit extends Cubit<bool> {
   WorkTypeSelectedCubit() : super(false);
 
   int currentSelectedItemIndex = -1;
-  void changeSelected(int newSelected) {
+  void changeSelected([int newSelected = -1]) {
     currentSelectedItemIndex = newSelected;
     emit(!state);
   }

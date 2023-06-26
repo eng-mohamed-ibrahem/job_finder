@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/views/screens/onboarding_screens/second_onboard_screen.dart';
 import 'package:job_finder/views/screens/onboarding_screens/third_onboard_screen.dart';
-
 import '../../../controller/cubit/onboarding_screen_cubit/onboard_screen_cubit.dart';
-import '../home_screen_and_search/main_screen.dart';
 import '../../widgets/onboarding_screen_widgets/custom_button.dart';
 import '../../widgets/onboarding_screen_widgets/top_title_onborading_screens.dart';
+import '../create_account_screens/signup_screen.dart';
 import 'first_onboard_screen.dart';
 
 class OnBoradingScreen extends StatefulWidget {
@@ -83,7 +82,7 @@ class _FirstOnBoradingScreenState extends State<OnBoradingScreen> {
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const MainScreen(),
+                            builder: (context) => const SignUp(),
                           ),
                           (route) => false);
                     }

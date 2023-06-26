@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../screens/home_screen_and_search/main_screen.dart';
+import '../../screens/create_account_screens/signup_screen.dart';
 
 class TopTitleOnBoardingScreen extends StatelessWidget {
   const TopTitleOnBoardingScreen({super.key});
@@ -21,7 +21,7 @@ class TopTitleOnBoardingScreen extends StatelessWidget {
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MainScreen(),
+                    builder: (context) => const SignUp(),
                   ),
                   (route) => false);
             },
