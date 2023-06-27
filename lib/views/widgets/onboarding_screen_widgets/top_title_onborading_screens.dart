@@ -11,7 +11,7 @@ class TopTitleOnBoardingScreen extends StatelessWidget {
       margin: const EdgeInsets.all(10),
       child: AppBar(
         leading: Image.asset(
-          'assets/images/Logo.png',
+          'assets/images/logo.png',
           width: 80,
           height: 20,
         ),

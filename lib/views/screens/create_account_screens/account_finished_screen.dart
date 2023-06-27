@@ -25,6 +25,7 @@ class AccountFinishedScreen extends StatelessWidget {
               'Your account has been set up!',
               style: TextStyle(
                 fontSize: 24,
+                color: Color.fromRGBO(17, 24, 39, 1),
                 fontWeight: FontWeight.w500,
               ),
             ),

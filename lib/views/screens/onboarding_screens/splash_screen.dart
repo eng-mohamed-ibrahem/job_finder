@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'onboarding_screen.dart';
 
 class Splash extends StatelessWidget {
@@ -19,24 +20,36 @@ class Splash extends StatelessWidget {
       body: Stack(
         alignment: Alignment.center,
         children: [
-          CircleAvatar(
-            radius: MediaQuery.of(context).size.width,
-            backgroundColor: const Color.fromRGBO(214, 228, 255, 0.14),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color.fromRGBO(214, 228, 255, 0.14),
+            ),
           ),
-          CircleAvatar(
-            radius: (MediaQuery.of(context).size.width - 85) - 95,
-            backgroundColor: const Color.fromRGBO(214, 228, 255, 0.14),
+          Container(
+            width: (MediaQuery.of(context).size.width - 85) - 95,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color.fromRGBO(214, 228, 255, 0.14),
+            ),
           ),
-          CircleAvatar(
-            radius: (MediaQuery.of(context).size.width - 180) - 95,
-            backgroundColor: const Color.fromRGBO(214, 228, 255, 0.14),
+          Container(
+            width: (MediaQuery.of(context).size.width - 180) - 95,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color.fromRGBO(214, 228, 255, 0.14),
+            ),
           ),
-          CircleAvatar(
-            radius: (MediaQuery.of(context).size.width - 260) - 95,
-            backgroundColor: const Color.fromRGBO(214, 228, 255, 0.3),
+          Container(
+            width: (MediaQuery.of(context).size.width - 260) - 95,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color.fromRGBO(214, 228, 255, 0.3),
+            ),
           ),
           Image.asset(
-            'assets/images/Logo.png',
+            'assets/images/logo.png',
             width: 141,
             height: 31,
           ),

@@ -1,6 +1,8 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../controller/cubit/signup_screens_cubit/work_type_selection_cubit.dart';
 import '../../../model/signup_models/work_type_model.dart';
 
@@ -88,7 +90,10 @@ class InterestedWorkTypeWidget extends StatelessWidget {
                   Text(
                     workTypeModel.text,
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w400),
+                      color: Color.fromRGBO(17, 24, 39, 1),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ],
               ),

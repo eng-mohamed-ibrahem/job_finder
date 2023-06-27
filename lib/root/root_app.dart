@@ -4,7 +4,7 @@ import 'package:job_finder/controller/cubit/navigation_screens_cubit/navigation_
 import 'package:job_finder/controller/cubit/onboarding_screen_cubit/onboard_screen_cubit.dart';
 import '../controller/cubit/signup_screens_cubit/signup_screens_cubit.dart';
 import '../controller/cubit/signup_screens_cubit/work_type_selection_cubit.dart';
-import '../views/screens/create_account_screens/work_preferred_location_screen.dart';
+import '../views/screens/onboarding_screens/splash_screen.dart';
 
 class Root extends StatelessWidget {
   const Root({super.key});
@@ -34,7 +34,7 @@ class Root extends StatelessWidget {
             bodyColor: const Color.fromRGBO(17, 24, 39, 1),
           ),
         ),
-        home: const PreferedWorkLocationScreen(), // SignUp, SplashScreen
+        home: const Splash(), // SignUp, SplashScreen
       ),
     );
   }
