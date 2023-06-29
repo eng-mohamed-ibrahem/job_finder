@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/controller/cubit/signup_screens_cubit/signup_screens_cubit.dart';
 import 'package:job_finder/views/screens/create_account_screens/setup_work_type_screen.dart';
+import 'package:job_finder/views/screens/login_screens/login_screen.dart';
 import 'package:job_finder/views/widgets/onboarding_screen_widgets/custom_button.dart';
 import '../../../controller/utils/validation.dart';
 import '../../widgets/signup_screen_widget/customized_text_field.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<SignUp> createState() => _SingupState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SingupState extends State<SignUp> {
+class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -31,7 +32,9 @@ class _SingupState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [Image.asset("assets/images/logo.png")],
+      ),
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -41,13 +44,6 @@ class _SingupState extends State<SignUp> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const BackButton(),
-                    Image.asset("assets/images/logo.png")
-                  ],
-                ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -79,8 +75,9 @@ class _SingupState extends State<SignUp> {
                   ),
                   keyboardType: TextInputType.text,
                   onChanged: (value) {
-                    if (!BlocProvider.of<SignupScreenCubit>(context).changed) {
-                      BlocProvider.of<SignupScreenCubit>(context)
+                    if (!BlocProvider.of<SignupLoginScreenCubit>(context)
+                        .changed) {
+                      BlocProvider.of<SignupLoginScreenCubit>(context)
                           .changeButtonStyle();
                     }
                   },
@@ -98,8 +95,9 @@ class _SingupState extends State<SignUp> {
                   ),
                   keyboardType: TextInputType.text,
                   onChanged: (value) {
-                    if (!BlocProvider.of<SignupScreenCubit>(context).changed) {
-                      BlocProvider.of<SignupScreenCubit>(context)
+                    if (!BlocProvider.of<SignupLoginScreenCubit>(context)
+                        .changed) {
+                      BlocProvider.of<SignupLoginScreenCubit>(context)
                           .changeButtonStyle();
                     }
                   },
@@ -107,9 +105,9 @@ class _SingupState extends State<SignUp> {
                 const SizedBox(
                   height: 20,
                 ),
-                BlocBuilder<SignupScreenCubit, SignupCubitState>(
+                BlocBuilder<SignupLoginScreenCubit, SignupCubitState>(
                     buildWhen: (previous, current) {
-                  if (current is SignupVisbilityCubitState) {
+                  if (current is ObscureVisbilityCubitState) {
                     return true;
                   }
                   return false;
@@ -124,20 +122,22 @@ class _SingupState extends State<SignUp> {
                       color: Colors.black12,
                     ),
                     obscureText:
-                        !BlocProvider.of<SignupScreenCubit>(context).visible,
+                        !BlocProvider.of<SignupLoginScreenCubit>(context)
+                            .visible,
                     suffixIcon: InkWell(
                       onTap: () {
-                        BlocProvider.of<SignupScreenCubit>(context)
+                        BlocProvider.of<SignupLoginScreenCubit>(context)
                             .updateVisibility();
                       },
-                      child: BlocProvider.of<SignupScreenCubit>(context).visible
+                      child: BlocProvider.of<SignupLoginScreenCubit>(context)
+                              .visible
                           ? const Icon(Icons.visibility)
                           : const Icon(Icons.visibility_off),
                     ),
                     onChanged: (value) {
-                      if (!BlocProvider.of<SignupScreenCubit>(context)
+                      if (!BlocProvider.of<SignupLoginScreenCubit>(context)
                           .changed) {
-                        BlocProvider.of<SignupScreenCubit>(context)
+                        BlocProvider.of<SignupLoginScreenCubit>(context)
                             .changeButtonStyle();
                       }
                     },
@@ -159,7 +159,14 @@ class _SingupState extends State<SignUp> {
                     ),
                     TextButton(
                       onPressed: () {
-                        // TODO navigate to login screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const LoginScreen();
+                            },
+                          ),
+                        );
                       },
                       child: const Text(
                         "Login",
@@ -178,41 +185,45 @@ class _SingupState extends State<SignUp> {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: BlocBuilder<SignupScreenCubit, SignupCubitState>(
-                      buildWhen: (previous, current) {
-                    if (current is SignupButtonCubitState) {
-                      return true;
-                    } else {
-                      return false;
-                    }
-                  }, builder: (context, state) {
-                    return CustomButton(
-                        fontSize: 16,
-                        backgroundColor:
-                            !BlocProvider.of<SignupScreenCubit>(context).changed
-                                ? const MaterialStatePropertyAll(
-                                    Color.fromRGBO(209, 213, 219, 1),
-                                  )
-                                : const MaterialStatePropertyAll(
-                                    Color.fromRGBO(51, 102, 255, 1),
-                                  ),
-                        textColor:
-                            !BlocProvider.of<SignupScreenCubit>(context).changed
-                                ? const Color(0xff6B7280)
-                                : Colors.white,
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const WorkTypeScreen(),
-                              ),
-                              (route) => false,
-                            );
-                          }
-                        },
-                        text: 'Create Account');
-                  }),
+                  child: BlocBuilder<SignupLoginScreenCubit, SignupCubitState>(
+                    buildWhen: (previous, current) {
+                      if (current is ChangeButtonStyleCubitState) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    },
+                    builder: (context, state) {
+                      return CustomButton(
+                          fontSize: 16,
+                          backgroundColor:
+                              !BlocProvider.of<SignupLoginScreenCubit>(context)
+                                      .changed
+                                  ? const MaterialStatePropertyAll(
+                                      Color.fromRGBO(209, 213, 219, 1),
+                                    )
+                                  : const MaterialStatePropertyAll(
+                                      Color.fromRGBO(51, 102, 255, 1),
+                                    ),
+                          textColor:
+                              !BlocProvider.of<SignupLoginScreenCubit>(context)
+                                      .changed
+                                  ? const Color(0xff6B7280)
+                                  : Colors.white,
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const WorkTypeScreen(),
+                                ),
+                                (route) => false,
+                              );
+                            }
+                          },
+                          text: 'Create Account');
+                    },
+                  ),
                 ),
                 const SizedBox(
                   height: 20,

@@ -2,19 +2,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'signup_cubit_states.dart';
 
-class SignupScreenCubit extends Cubit<SignupCubitState> {
-  SignupScreenCubit() : super(SignupCubitInitialState());
+class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
+  SignupLoginScreenCubit() : super(SignupCubitInitialState());
 
   bool visible = false;
   bool changed = false;
+  bool checked = false;
 
   updateVisibility() {
     visible = !visible;
-    emit(SignupVisbilityCubitState());
+    emit(ObscureVisbilityCubitState());
   }
 
   changeButtonStyle() {
     changed = !changed;
-    emit(SignupButtonCubitState());
+    emit(ChangeButtonStyleCubitState());
+  }
+
+  updateChecked() {
+    checked = !checked;
+    emit(ChangeCheckedCubitState());
   }
 }

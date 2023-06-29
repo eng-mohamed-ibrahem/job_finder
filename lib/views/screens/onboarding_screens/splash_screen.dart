@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'onboarding_screen.dart';
 
 class Splash extends StatelessWidget {

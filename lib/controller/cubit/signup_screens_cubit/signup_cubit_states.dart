@@ -4,6 +4,8 @@ abstract class SignupCubitState {}
 
 class SignupCubitInitialState extends SignupCubitState {}
 
-class SignupVisbilityCubitState extends SignupCubitState {}
+class ObscureVisbilityCubitState extends SignupCubitState {}
 
-class SignupButtonCubitState extends SignupCubitState {}
+class ChangeButtonStyleCubitState extends SignupCubitState {}
+
+class ChangeCheckedCubitState extends SignupCubitState {}

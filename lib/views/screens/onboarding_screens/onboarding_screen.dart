@@ -82,7 +82,7 @@ class _FirstOnBoradingScreenState extends State<OnBoradingScreen> {
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const SignUp(),
+                            builder: (context) => const SignupScreen(),
                           ),
                           (route) => false);
                     }
