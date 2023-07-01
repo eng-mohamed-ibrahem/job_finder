@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../controller/cubit/signup_screens_cubit/signup_screens_cubit.dart';
 import '../../../controller/utils/validation.dart';
 import '../../widgets/onboarding_screen_widgets/custom_button.dart';
 import '../../widgets/signup_screen_widget/customized_text_field.dart';
 import '../create_account_screens/signup_screen.dart';
+import '../forget_password/forget_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,10 +32,12 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         actions: [
-          Image.asset(
-            'assets/images/logo.png',
-          )
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Image.asset("assets/images/logo.png"),
+          ),
         ],
       ),
       body: Form(
@@ -41,6 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
                 'Login',
@@ -62,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 50,
               ),
               CustomizedTextFormField(
                 controller: usernameController,
@@ -154,7 +159,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Spacer(),
                   TextButton(
                     onPressed: () {
-                      // TODO: Naviage to Forgot Password
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ForgetPasswordScreen(),
+                        ),
+                      );
                     },
                     child: const Text(
                       'Forgot Password?',

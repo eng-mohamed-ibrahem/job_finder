@@ -25,7 +25,6 @@ class _SignupScreenState extends State<SignupScreen> {
     usernameController.dispose();
     emailController.dispose();
     passwordController.dispose();
-    formKey.currentState?.dispose();
     super.dispose();
   }
 
@@ -33,7 +32,13 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [Image.asset("assets/images/logo.png")],
+        leadingWidth: 80,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Image.asset("assets/images/logo.png"),
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
       body: Padding(
