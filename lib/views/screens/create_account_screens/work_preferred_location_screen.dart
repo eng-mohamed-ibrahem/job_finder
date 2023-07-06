@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 import '../../../controller/cubit/signup_screens_cubit/work_type_selection_cubit.dart';
 import '../../../model/signup_models/country_model.dart';
 import '../../widgets/onboarding_screen_widgets/custom_button.dart';
@@ -8,6 +8,9 @@ import 'account_finished_screen.dart';
 
 class PreferedWorkLocationScreen extends StatefulWidget {
   const PreferedWorkLocationScreen({super.key});
+
+  //
+  final wrapSettings = const WrapSettings();
 
   @override
   State<PreferedWorkLocationScreen> createState() =>
@@ -26,6 +29,9 @@ class WorkPreferedLocationCubit extends Cubit<int> {
 
 class _PreferedWorkLocationScreenState
     extends State<PreferedWorkLocationScreen> {
+  final MultiSelectController<String> controller =
+      MultiSelectController<String>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,25 +168,25 @@ class _PreferedWorkLocationScreenState
                 BlocBuilder<WorkTypeSelectedCubit, bool>(
                   builder: (context, state) {
                     return Expanded(
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemCount: coutriesNames.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 15,
-                          mainAxisExtent: 45,
+                      child: MultiSelectContainer(
+                        controller: controller,
+                        wrapSettings: const WrapSettings(
+                          runSpacing: 10,
                         ),
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              countries[index].selected =
-                                  !countries[index].selected;
-                              BlocProvider.of<WorkTypeSelectedCubit>(context)
-                                  .changeSelected();
-                            },
+                        itemsPadding: const EdgeInsets.all(5),
+                        itemsDecoration: MultiSelectDecorations(
+                          selectedDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: const Color.fromRGBO(51, 102, 255, 1),
+                            ),
+                            color: const Color.fromRGBO(214, 228, 255, 1),
+                          ),
+                        ),
+                        items: List.generate(
+                          countries.length,
+                          (index) => MultiSelectCard(
+                            value: '${countries[index].countryName}}',
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
@@ -213,12 +219,16 @@ class _PreferedWorkLocationScreenState
                                       color: Color.fromRGBO(17, 24, 39, 1),
                                       fontWeight: FontWeight.w400,
                                     ),
-                                  )
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
                                 ],
                               ),
                             ),
-                          );
-                        },
+                          ),
+                        ),
+                        onChange: (allSelectedItems, selectedItem) {},
                       ),
                     );
                   },
@@ -230,6 +240,19 @@ class _PreferedWorkLocationScreenState
                     text: 'Next',
                     fontSize: 16,
                     onPressed: () {
+                      /// PROBLEM HERE:
+                      /// the package return the selected items with } at the en, so i remove it
+
+                      // ignore: avoid_print
+                      // SAVE THE SELECTED ITEMS IN THE DATABASE
+                      debugPrint(controller
+                          .getSelectedItems()
+                          .map((e) => e.replaceAll('}', ''))
+                          .toList()
+                          .toString());
+
+                      // TODO validate the selection if the user select at least one item of work type
+                      // and one item of work location
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -250,7 +273,6 @@ List<String> coutriesNames = [
   'Argentina',
   'Brazil',
   'Singapore',
-  'Argentina',
   'Canada',
   'China',
   'India',
@@ -262,6 +284,7 @@ List<String> coutriesNames = [
   'Vietnam',
 ];
 
+/// Country model
 List<Country> countries = List.generate(
   coutriesNames.length,
   (index) {
