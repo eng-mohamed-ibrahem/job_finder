@@ -1,16 +1,13 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:job_finder/views/widgets/onboarding_screen_widgets/custom_button.dart';
-import 'package:permission_handler/permission_handler.dart';
-
+import '../../../controller/cubit/edit_profile_screens_cubit/file_path_cubit.dart';
+import '../../../controller/utils/methods.dart';
 import '../../widgets/signup_screen_widget/customized_text_field.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -18,15 +15,6 @@ class EditProfileScreen extends StatefulWidget {
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
-}
-
-class ImagePathCubit extends Cubit<String> {
-  ImagePathCubit() : super('');
-
-  void setImagePath(String path) {
-    log("----- $path-----");
-    emit(path);
-  }
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
@@ -73,12 +61,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      BlocBuilder<ImagePathCubit, String>(
-                        builder: (context, imagePath) {
+                      BlocBuilder<FilePathCubit, FilePathCubitState>(
+                        buildWhen: (previous, current) {
+                          if (current is ImagePathCubitState) {
+                            return true;
+                          }
+                          return false;
+                        },
+                        builder: (context, state) {
+                          String imagePath =
+                              BlocProvider.of<FilePathCubit>(context).imagePath;
                           return CircleAvatar(
                             radius: 45,
                             backgroundImage: imagePath.isEmpty
-                                ? const AssetImage('assets/images/profile.png')
+                                ? const AssetImage(
+                                    'assets/icons/default_user_profile.png')
                                 : FileImage(
                                     File(
                                       imagePath,
@@ -90,7 +87,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       const SizedBox(height: 5),
                       GestureDetector(
                         onTap: () {
-                          popUpBottomSheet(context);
+                          pickImage(context);
                         },
                         child: const Text(
                           'Change Photo',
@@ -292,162 +289,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  void popUpBottomSheet(BuildContext context) async {
-    showModalBottomSheet(
-      context: context,
-      builder: (_) {
-        return Padding(
-          padding: const EdgeInsets.all(10),
-          child: SizedBox(
-            height: 60,
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                GestureDetector(
-                  onTap: () async {
-                    var permission = await Permission.camera.request();
-                    if (permission.isDenied) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Please allow access to camera',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                      permission = await Permission.camera.request();
-
-                      if (permission.isPermanentlyDenied) {
-                        openAppSettings();
-                      }
-                    }
-                    if (permission.isGranted || permission.isLimited) {
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                      }
-                      try {
-                        await ImagePicker()
-                            .pickImage(source: ImageSource.camera)
-                            .then(
-                          (profileImage) {
-                            if (profileImage != null) {
-                              // save image to local device
-                              BlocProvider.of<ImagePathCubit>(context)
-                                  .setImagePath(profileImage.path);
-                            }
-                          },
-                        );
-                      } on FileSystemException catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                e.message.toString(),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                      }
-                    }
-                  },
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: Image.asset('assets/icons/camera_picker.png'),
-                      ),
-                    ],
-                  ),
-                ),
-                //! ----------------------------------------
-                GestureDetector(
-                  onTap: () async {
-                    var permission = await Permission.photos.request();
-
-                    if (permission.isDenied) {
-                      log('denied');
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Please allow access to gallery',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                      permission = await Permission.photos.request();
-                      if (permission.isPermanentlyDenied) {
-                        openAppSettings();
-                      }
-                    }
-
-                    log(permission.toString());
-                    if (permission.isGranted || permission.isLimited) {
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                      }
-                      try {
-                        await ImagePicker()
-                            .pickImage(source: ImageSource.gallery)
-                            .then(
-                          (profileImage) {
-                            if (profileImage != null) {
-                              //TODO: save image to local device
-                              BlocProvider.of<ImagePathCubit>(context)
-                                  .setImagePath(profileImage.path);
-                            }
-                          },
-                        );
-                      } on FileSystemException catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                e.message.toString(),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                      }
-                    }
-                  },
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: Image.asset('assets/icons/gallery_picker.png'),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }

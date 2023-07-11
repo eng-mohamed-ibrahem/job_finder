@@ -1,11 +1,11 @@
 import 'dart:developer';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/views/screens/profile_settings_screens/login_security_screen.dart';
 import 'package:job_finder/views/screens/profile_settings_screens/set_language_screen.dart';
 import 'package:job_finder/views/screens/profile_settings_screens/set_notification_screen.dart';
-
+import '../../../controller/cubit/edit_profile_screens_cubit/file_path_cubit.dart';
 import 'add_portfolio_screen.dart';
 import 'edit_profile_screen.dart';
 
@@ -105,13 +105,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Positioned(
                         bottom: -45,
                         left: MediaQuery.of(context).size.width / 2.0 - 45,
-                        child: Container(
-                          height: 90,
-                          width: 90,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                          ),
-                          child: Image.asset('assets/images/profile.png'),
+                        child: BlocBuilder<FilePathCubit, FilePathCubitState>(
+                          buildWhen: (previous, current) {
+                            if (current is ImagePathCubitState) {
+                              return true;
+                            }
+                            return false;
+                          },
+                          builder: (context, state) {
+                            String imagePath =
+                                BlocProvider.of<FilePathCubit>(context)
+                                    .imagePath;
+                            return CircleAvatar(
+                              radius: 45,
+                              backgroundImage: imagePath.isEmpty
+                                  ? const AssetImage(
+                                      'assets/icons/default_user_profile.png')
+                                  : FileImage(
+                                      File(
+                                        imagePath,
+                                      ),
+                                    ) as ImageProvider,
+                            );
+                          },
                         ),
                       )
                     ],

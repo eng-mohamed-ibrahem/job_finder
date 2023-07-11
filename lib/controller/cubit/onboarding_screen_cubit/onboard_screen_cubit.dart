@@ -6,5 +6,4 @@ class OnBoardScreenCubit extends Cubit<int> {
   updateScreenIndex(int newIndex) {
     emit(newIndex);
   }
-  
 }

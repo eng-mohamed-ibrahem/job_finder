@@ -9,3 +9,11 @@ class ObscureVisbilityCubitState extends SignupCubitState {}
 class ChangeButtonStyleCubitState extends SignupCubitState {}
 
 class ChangeCheckedCubitState extends SignupCubitState {}
+
+class SingupLoadingCubitState extends SignupCubitState {}
+
+class SingupSuccessCubitState extends SignupCubitState {}
+
+class SignupUnauthorizedCubitState extends SignupCubitState {}
+
+class SingupErrorCubitState extends SignupCubitState {}

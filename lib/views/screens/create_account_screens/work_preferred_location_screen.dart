@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
-import '../../../controller/cubit/signup_screens_cubit/work_type_selection_cubit.dart';
+
 import '../../../model/signup_models/country_model.dart';
 import '../../widgets/onboarding_screen_widgets/custom_button.dart';
 import 'account_finished_screen.dart';
@@ -165,73 +165,69 @@ class _PreferedWorkLocationScreenState
                 const SizedBox(
                   height: 10,
                 ),
-                BlocBuilder<WorkTypeSelectedCubit, bool>(
-                  builder: (context, state) {
-                    return Expanded(
-                      child: MultiSelectContainer(
-                        controller: controller,
-                        wrapSettings: const WrapSettings(
-                          runSpacing: 10,
+                Expanded(
+                  child: MultiSelectContainer(
+                    controller: controller,
+                    wrapSettings: const WrapSettings(
+                      runSpacing: 10,
+                    ),
+                    itemsPadding: const EdgeInsets.all(5),
+                    itemsDecoration: MultiSelectDecorations(
+                      selectedDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: const Color.fromRGBO(51, 102, 255, 1),
                         ),
-                        itemsPadding: const EdgeInsets.all(5),
-                        itemsDecoration: MultiSelectDecorations(
-                          selectedDecoration: BoxDecoration(
+                        color: const Color.fromRGBO(214, 228, 255, 1),
+                      ),
+                    ),
+                    items: List.generate(
+                      countries.length,
+                      (index) => MultiSelectCard(
+                        value: '${countries[index].countryName}}',
+                        child: Container(
+                          decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: const Color.fromRGBO(51, 102, 255, 1),
+                              color: !countries[index].selected
+                                  ? const Color.fromRGBO(229, 231, 235, 1)
+                                  : const Color.fromRGBO(51, 102, 255, 1),
                             ),
-                            color: const Color.fromRGBO(214, 228, 255, 1),
+                            color: !countries[index].selected
+                                ? const Color.fromRGBO(250, 250, 250, 1)
+                                : const Color.fromRGBO(214, 228, 255, 1),
                           ),
-                        ),
-                        items: List.generate(
-                          countries.length,
-                          (index) => MultiSelectCard(
-                            value: '${countries[index].countryName}}',
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: !countries[index].selected
-                                      ? const Color.fromRGBO(229, 231, 235, 1)
-                                      : const Color.fromRGBO(51, 102, 255, 1),
+                          child: Row(
+                            children: [
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Image.asset(
+                                countries[index].countryImage,
+                                width: 30,
+                                height: 30,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                countries[index].countryName,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Color.fromRGBO(17, 24, 39, 1),
+                                  fontWeight: FontWeight.w400,
                                 ),
-                                color: !countries[index].selected
-                                    ? const Color.fromRGBO(250, 250, 250, 1)
-                                    : const Color.fromRGBO(214, 228, 255, 1),
                               ),
-                              child: Row(
-                                children: [
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Image.asset(
-                                    countries[index].countryImage,
-                                    width: 30,
-                                    height: 30,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    countries[index].countryName,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Color.fromRGBO(17, 24, 39, 1),
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                ],
+                              const SizedBox(
+                                width: 5,
                               ),
-                            ),
+                            ],
                           ),
                         ),
-                        onChange: (allSelectedItems, selectedItem) {},
                       ),
-                    );
-                  },
+                    ),
+                    onChange: (allSelectedItems, selectedItem) {},
+                  ),
                 ),
                 Container(
                   width: double.infinity,
@@ -240,7 +236,7 @@ class _PreferedWorkLocationScreenState
                     text: 'Next',
                     fontSize: 16,
                     onPressed: () {
-                      /// PROBLEM HERE:
+                      /// PROBLEM :
                       /// the package return the selected items with } at the en, so i remove it
 
                       // ignore: avoid_print
@@ -251,14 +247,24 @@ class _PreferedWorkLocationScreenState
                           .toList()
                           .toString());
 
-                      // TODO validate the selection if the user select at least one item of work type
-                      // and one item of work location
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AccountFinishedScreen(),
-                        ),
-                      );
+                      if (controller.getSelectedItems().isEmpty ||
+                          context.read<WorkPreferedLocationCubit>().state ==
+                              -1) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Please select work type and one country of work location',
+                            ),
+                          ),
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AccountFinishedScreen(),
+                          ),
+                        );
+                      }
                     },
                   ),
                 )

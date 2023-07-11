@@ -17,7 +17,9 @@ class FirstOnBoradingScreen extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(height: 5,),
+          const SizedBox(
+            height: 5,
+          ),
           RichText(
             text: const TextSpan(
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.w500),

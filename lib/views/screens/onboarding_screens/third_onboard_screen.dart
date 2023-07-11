@@ -17,8 +17,9 @@ class ThirdOnBoradingScreen extends StatelessWidget {
               fit: BoxFit.contain,
             ),
           ),
-          const SizedBox(height: 5,),
-
+          const SizedBox(
+            height: 5,
+          ),
           RichText(
             text: const TextSpan(
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.w500),

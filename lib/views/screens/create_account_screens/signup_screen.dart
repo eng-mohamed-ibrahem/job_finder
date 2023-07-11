@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/controller/cubit/signup_screens_cubit/signup_screens_cubit.dart';
+import 'package:job_finder/controller/utils/app_images.dart';
 import 'package:job_finder/views/screens/create_account_screens/setup_work_type_screen.dart';
 import 'package:job_finder/views/screens/login_screens/login_screen.dart';
 import 'package:job_finder/views/widgets/onboarding_screen_widgets/custom_button.dart';
+
 import '../../../controller/utils/validation.dart';
 import '../../widgets/signup_screen_widget/customized_text_field.dart';
 
@@ -36,7 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Image.asset("assets/images/logo.png"),
+            child: Image.asset(Assets.imagesLargeImagesLogo),
           ),
         ],
       ),
@@ -190,15 +194,38 @@ class _SignupScreenState extends State<SignupScreen> {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: BlocBuilder<SignupLoginScreenCubit, SignupCubitState>(
-                    buildWhen: (previous, current) {
-                      if (current is ChangeButtonStyleCubitState) {
-                        return true;
-                      } else {
-                        return false;
+                  child: BlocConsumer<SignupLoginScreenCubit, SignupCubitState>(
+                    listener: (context, state) {
+                      if (state is SignupUnauthorizedCubitState) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                BlocProvider.of<SignupLoginScreenCubit>(context)
+                                    .errorMessageWhileSignup!),
+                          ),
+                        );
+                      }
+                      if (state is SingupErrorCubitState) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Something went wrong!'),
+                          ),
+                        );
+                      }
+                      if (state is SingupSuccessCubitState) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const WorkTypeScreen(),
+                          ),
+                          (route) => false,
+                        );
                       }
                     },
                     builder: (context, state) {
+                      if (state is SingupLoadingCubitState) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
                       return CustomButton(
                           fontSize: 16,
                           backgroundColor:
@@ -217,13 +244,14 @@ class _SignupScreenState extends State<SignupScreen> {
                                   : Colors.white,
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const WorkTypeScreen(),
-                                ),
-                                (route) => false,
+                              /// sign up the user and savein databse
+                              BlocProvider.of<SignupLoginScreenCubit>(context)
+                                  .singup(
+                                email: emailController.text.trim(),
+                                password: passwordController.text,
+                                name: usernameController.text.trim(),
                               );
+                              log('press signup button');
                             }
                           },
                           text: 'Create Account');
@@ -281,7 +309,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                           ),
                           child: Image.asset(
-                            "assets/icons/google.png",
+                            Assets.imagesIconsGoogle,
                           ),
                         ),
                       ),
@@ -296,7 +324,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                           ),
                           child: Image.asset(
-                            "assets/icons/facebook.png",
+                            Assets.imagesIconsFacebook,
                           ),
                         ),
                       )

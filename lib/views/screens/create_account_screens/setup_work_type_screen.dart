@@ -1,10 +1,10 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_finder/views/screens/create_account_screens/work_preferred_location_screen.dart';
 import 'package:job_finder/views/widgets/onboarding_screen_widgets/custom_button.dart';
-
+import '../../../controller/cubit/signup_screens_cubit/work_type_selection_cubit.dart';
 import '../../../model/signup_models/work_type_model.dart';
 import '../../widgets/signup_screen_widget/interested_work_type_widget.dart';
 
@@ -82,14 +82,24 @@ class _WorkTypeScreenState extends State<WorkTypeScreen> {
               child: CustomButton(
                   fontSize: 16,
                   onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            const PreferedWorkLocationScreen(),
-                      ),
-                      (route) => false,
-                    );
+                    if (BlocProvider.of<WorkTypeSelectedCubit>(context)
+                            .currentSelectedItemIndex ==
+                        -1) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please select your work type'),
+                        ),
+                      );
+                    } else {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const PreferedWorkLocationScreen(),
+                        ),
+                        (route) => false,
+                      );
+                    }
                   },
                   text: 'Next'),
             ),
