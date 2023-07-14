@@ -18,7 +18,7 @@ class SignupScreen extends StatefulWidget {
   State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignupScreenState extends State<SignupScreen> with RouteAware {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -125,7 +125,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     controller: passwordController,
                     validator: Validation.passwordValidated,
                     hintText: "Password",
-                    helperText: "Password must be at least 8 charactrs",
+                    helperText: "Password must be at least 8 characters",
                     prefixIcon: const Icon(
                       Icons.lock_outline_rounded,
                       color: Colors.black12,

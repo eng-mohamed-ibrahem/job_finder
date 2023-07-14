@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,11 +37,6 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
     try {
       await DioHelper.postData(
         endPoint: UrlPaths.register,
-        data: {
-          'email': email,
-          'password': password,
-          'name': name,
-        },
         queryParameters: {
           'email': email,
           'password': password,
@@ -64,8 +58,8 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
         }
       });
     } catch (e) {
+      debugPrint('cubit-$e');
       emit(SingupErrorCubitState());
-      log(response.toString());
     }
   }
 

@@ -6,7 +6,6 @@ import 'package:job_finder/controller/cubit/onboarding_screen_cubit/onboard_scre
 import '../controller/cubit/edit_profile_screens_cubit/file_path_cubit.dart';
 import '../controller/cubit/signup_screens_cubit/signup_screens_cubit.dart';
 import '../controller/cubit/signup_screens_cubit/work_type_selection_cubit.dart';
-import '../views/screens/create_account_screens/signup_screen.dart';
 import '../views/screens/profile_settings_screens/profile_screen.dart';
 
 class Root extends StatelessWidget {
@@ -43,7 +42,7 @@ class Root extends StatelessWidget {
             bodyColor: const Color.fromRGBO(17, 24, 39, 1),
           ),
         ),
-        home: const SignupScreen(), // SignUp, Splash,ProfileScreen,LoginScreen
+        home: const ProfileScreen(), // SignUp, Splash,ProfileScreen,LoginScreen
       ),
     );
   }
