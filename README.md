@@ -1,5 +1,5 @@
 # job_finder
-(Working on it)...
+## (Working on it)...
 JobFinder is a mobile application designed to help job seekers find suitable job opportunities quickly and easily.
 With JobFinder, users can search for jobs based on job title. 
 
