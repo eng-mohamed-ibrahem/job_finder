@@ -1,13 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:job_finder/controller/cubit/signup_screens_cubit/signup_screens_cubit.dart';
+import 'package:job_finder/controller/cubit/signup_screens_cubit/signup_login_screens_cubit.dart';
 import 'package:job_finder/controller/utils/app_images.dart';
 import 'package:job_finder/views/screens/create_account_screens/setup_work_type_screen.dart';
 import 'package:job_finder/views/screens/login_screens/login_screen.dart';
 import 'package:job_finder/views/widgets/onboarding_screen_widgets/custom_button.dart';
-
 import '../../../controller/utils/validation.dart';
 import '../../widgets/signup_screen_widget/customized_text_field.dart';
 
@@ -59,18 +56,18 @@ class _SignupScreenState extends State<SignupScreen> with RouteAware {
                 const Text(
                   "Create Account",
                   style: TextStyle(
-                    color: Color.fromRGBO(17, 24, 39, 1),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 30,
-                  ),
+                      color: Color.fromRGBO(17, 24, 39, 1),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 30,
+                      fontFamily: 'Rubik'),
                 ),
                 const Text(
                   "Please create an account to find your dream job",
                   style: TextStyle(
-                    color: Color.fromRGBO(107, 114, 128, 1),
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                  ),
+                      color: Color.fromRGBO(107, 114, 128, 1),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                      fontFamily: 'Rubik'),
                 ),
                 const SizedBox(
                   height: 30,
@@ -216,7 +213,7 @@ class _SignupScreenState extends State<SignupScreen> with RouteAware {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const WorkTypeScreen(),
+                            builder: (context) => const CareerTypeScreen(),
                           ),
                           (route) => false,
                         );
@@ -251,7 +248,6 @@ class _SignupScreenState extends State<SignupScreen> with RouteAware {
                                 password: passwordController.text,
                                 name: usernameController.text.trim(),
                               );
-                              log('press signup button');
                             }
                           },
                           text: 'Create Account');

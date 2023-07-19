@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../controller/utils/app_images.dart';
+
 class ThirdOnBoradingScreen extends StatelessWidget {
   const ThirdOnBoradingScreen({super.key});
 
@@ -11,7 +13,7 @@ class ThirdOnBoradingScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Image.asset(
-              'assets/images/third_onboarding_Background.png',
+              Assets.imagesLargeImagesThirdOnboardingBackground,
               width: double.infinity,
               height: double.infinity,
               fit: BoxFit.contain,

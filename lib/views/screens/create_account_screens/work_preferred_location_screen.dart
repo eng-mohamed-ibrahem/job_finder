@@ -1,7 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
-
+import 'package:job_finder/controller/cubit/signup_screens_cubit/signup_login_screens_cubit.dart';
+import 'package:job_finder/controller/utils/enum_active_routes_observer.dart';
+import 'package:job_finder/root/root_app.dart';
+import '../../../controller/utils/app_images.dart';
+import '../../../controller/utils/shared_helper.dart';
+import '../../../controller/utils/sql_helper/sql_helper.dart';
 import '../../../model/signup_models/country_model.dart';
 import '../../widgets/onboarding_screen_widgets/custom_button.dart';
 import 'account_finished_screen.dart';
@@ -9,28 +16,43 @@ import 'account_finished_screen.dart';
 class PreferedWorkLocationScreen extends StatefulWidget {
   const PreferedWorkLocationScreen({super.key});
 
-  //
-  final wrapSettings = const WrapSettings();
-
   @override
   State<PreferedWorkLocationScreen> createState() =>
       _PreferedWorkLocationScreenState();
 }
 
-//!---------------------------------------------------------------------------
-
-class WorkPreferedLocationCubit extends Cubit<int> {
-  WorkPreferedLocationCubit() : super(-1);
-
-  void changeSelectedIndex(int index) => emit(index);
+// store work prefered location in cubit signup
+class WorkTypeNature extends Cubit<int> {
+  WorkTypeNature() : super(-1);
+  String workNature = 'Office';
+  void changeSelectedIndex(int index) {
+    index == 0 ? workNature = 'Office' : workNature = 'Remote';
+    emit(index);
+  }
 }
 
-//!---------------------------------------------------------------------------
-
-class _PreferedWorkLocationScreenState
-    extends State<PreferedWorkLocationScreen> {
+class _PreferedWorkLocationScreenState extends State<PreferedWorkLocationScreen>
+    with RouteAware {
   final MultiSelectController<String> controller =
       MultiSelectController<String>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void didPush() {
+    SharedHelper.saveData(
+        key: SharedHelper.activeRouteKey, value: ActiveRoute.preferedLocations.route);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +61,7 @@ class _PreferedWorkLocationScreenState
         body: MultiBlocProvider(
           providers: [
             BlocProvider(
-              create: (context) => WorkPreferedLocationCubit(),
+              create: (context) => WorkTypeNature(),
             ),
           ],
           child: Padding(
@@ -69,7 +91,7 @@ class _PreferedWorkLocationScreenState
                 const SizedBox(
                   height: 30,
                 ),
-                BlocBuilder<WorkPreferedLocationCubit, int>(
+                BlocBuilder<WorkTypeNature, int>(
                   builder: (context, state) {
                     return Center(
                       child: Container(
@@ -87,7 +109,7 @@ class _PreferedWorkLocationScreenState
                               onTap: () {
                                 // change color of widget
                                 context
-                                    .read<WorkPreferedLocationCubit>()
+                                    .read<WorkTypeNature>()
                                     .changeSelectedIndex(0);
                               },
                               child: Container(
@@ -118,7 +140,7 @@ class _PreferedWorkLocationScreenState
                               onTap: () {
                                 // change color of widget
                                 context
-                                    .read<WorkPreferedLocationCubit>()
+                                    .read<WorkTypeNature>()
                                     .changeSelectedIndex(1);
                               },
                               child: Container(
@@ -232,41 +254,53 @@ class _PreferedWorkLocationScreenState
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: CustomButton(
-                    text: 'Next',
-                    fontSize: 16,
-                    onPressed: () {
-                      /// PROBLEM :
-                      /// the package return the selected items with } at the en, so i remove it
-
-                      // ignore: avoid_print
-                      // SAVE THE SELECTED ITEMS IN THE DATABASE
-                      debugPrint(controller
-                          .getSelectedItems()
-                          .map((e) => e.replaceAll('}', ''))
-                          .toList()
-                          .toString());
-
-                      if (controller.getSelectedItems().isEmpty ||
-                          context.read<WorkPreferedLocationCubit>().state ==
-                              -1) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Please select work type and one country of work location',
+                  child: Builder(builder: (context) {
+                    return CustomButton(
+                      text: 'Next',
+                      fontSize: 16,
+                      onPressed: () async {
+                        if (controller.getSelectedItems().isEmpty ||
+                            context.read<WorkTypeNature>().state == -1) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Please select work type and one country of work location',
+                              ),
                             ),
-                          ),
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AccountFinishedScreen(),
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                          );
+                        } else {
+                          var workNature =
+                              context.read<WorkTypeNature>().workNature;
+                          BlocProvider.of<SignupLoginScreenCubit>(context)
+                              .userModel!
+                              .workNature = workNature;
+
+                          var workLocations = controller
+                              .getSelectedItems()
+                              .map((e) => e.replaceAll('}', ''))
+                              .toList();
+                          BlocProvider.of<SignupLoginScreenCubit>(context)
+                              .userModel!
+                              .workLocations = workLocations;
+
+                          /// ------------------------------------------------ ///
+                          await SqlHelper.updateData(queryStatement: ''' 
+                          UPDATE  ${UserTableColumnTitles.usersTable} SET ${UserTableColumnTitles.workNature} = '$workNature', ${UserTableColumnTitles.workLocations} = '${jsonEncode(workLocations)}';
+                          ''');
+                          if (context.mounted) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const AccountFinishedScreen(),
+                              ),
+                              (route) => false,
+                            );
+                          }
+                        }
+                      },
+                    );
+                  }),
                 )
               ],
             ),
@@ -275,27 +309,66 @@ class _PreferedWorkLocationScreenState
   }
 }
 
-List<String> coutriesNames = [
-  'Argentina',
-  'Brazil',
-  'Singapore',
-  'Canada',
-  'China',
-  'India',
-  'Indonesia',
-  'Malaysia',
-  'Philippines',
-  'Saudi_arabia',
-  'United States',
-  'Vietnam',
-];
-
 /// Country model
-List<Country> countries = List.generate(
-  coutriesNames.length,
-  (index) {
-    return Country(
-        countryName: coutriesNames[index],
-        countryImage: 'assets/icons/${coutriesNames[index]}.png');
-  },
-);
+List<Country> countries = [
+  Country(
+    countryName: 'Argentina',
+    countryImage: Assets.imagesIconsArgentina,
+    selected: false,
+  ),
+  Country(
+    countryName: 'Brazil',
+    countryImage: Assets.imagesIconsBrazil,
+    selected: false,
+  ),
+  Country(
+    countryName: 'Singapore',
+    countryImage: Assets.imagesIconsSingapore,
+    selected: false,
+  ),
+  Country(
+    countryName: 'Canada',
+    countryImage: Assets.imagesIconsCanada,
+    selected: false,
+  ),
+  Country(
+    countryName: 'China',
+    countryImage: Assets.imagesIconsChina,
+    selected: false,
+  ),
+  Country(
+    countryName: 'India',
+    countryImage: Assets.imagesIconsIndia,
+    selected: false,
+  ),
+  Country(
+    countryName: 'Indonesia',
+    countryImage: Assets.imagesIconsIndonesia,
+    selected: false,
+  ),
+  Country(
+    countryName: 'Malaysia',
+    countryImage: Assets.imagesIconsMalaysia,
+    selected: false,
+  ),
+  Country(
+    countryName: 'Philippines',
+    countryImage: Assets.imagesIconsPhilippines,
+    selected: false,
+  ),
+  Country(
+    countryName: 'Saudi Arabia',
+    countryImage: Assets.imagesIconsSaudiArabia,
+    selected: false,
+  ),
+  Country(
+    countryName: 'United States',
+    countryImage: Assets.imagesIconsUnitedStates,
+    selected: false,
+  ),
+  Country(
+    countryName: 'Vietnam',
+    countryImage: Assets.imagesIconsVietnam,
+    selected: false,
+  ),
+];

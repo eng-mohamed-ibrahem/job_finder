@@ -20,15 +20,16 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Email address'),
+        title: const Text('Phone Number'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Main e-mail address'),
+            const Text('Set phone number'),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             IntlPhoneField(
               inputFormatters: [
@@ -84,12 +85,9 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
             ListTile(
               leading:
-                  const Text('Use the phone number to reset your password'),
+                  const Text('Use this phone number to reset your password'),
               trailing: Switch(
                   value: isPhoneUsedToResetPassword,
                   onChanged: (value) {
@@ -99,7 +97,8 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                   }),
             ),
             const Spacer(),
-            Center(
+            SizedBox(
+              width: double.infinity,
               child: CustomButton(
                 fontSize: 16,
                 onPressed: () {

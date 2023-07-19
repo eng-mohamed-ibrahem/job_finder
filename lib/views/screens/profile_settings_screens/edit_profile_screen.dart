@@ -7,6 +7,7 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:job_finder/views/widgets/onboarding_screen_widgets/custom_button.dart';
 import '../../../controller/cubit/edit_profile_screens_cubit/file_path_cubit.dart';
+import '../../../controller/utils/app_images.dart';
 import '../../../controller/utils/methods.dart';
 import '../../widgets/signup_screen_widget/customized_text_field.dart';
 
@@ -75,7 +76,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             radius: 45,
                             backgroundImage: imagePath.isEmpty
                                 ? const AssetImage(
-                                    'assets/icons/default_user_profile.png')
+                                    Assets.imagesIconsDefaultUserProfile,
+                                  )
                                 : FileImage(
                                     File(
                                       imagePath,

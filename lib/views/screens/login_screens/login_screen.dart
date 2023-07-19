@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../controller/cubit/signup_screens_cubit/signup_screens_cubit.dart';
+import '../../../controller/cubit/signup_screens_cubit/signup_login_screens_cubit.dart';
+import '../../../controller/utils/app_images.dart';
 import '../../../controller/utils/validation.dart';
 import '../../widgets/onboarding_screen_widgets/custom_button.dart';
 import '../../widgets/signup_screen_widget/customized_text_field.dart';
@@ -16,13 +16,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    usernameController.dispose();
+    emailController.dispose();
     passwordController.dispose();
     formKey.currentState?.dispose();
     super.dispose();
@@ -36,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Image.asset("assets/images/logo.png"),
+            child: Image.asset(Assets.imagesLargeImagesLogo),
           ),
         ],
       ),
@@ -70,8 +70,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 50,
               ),
               CustomizedTextFormField(
-                controller: usernameController,
-                hintText: "Username",
+                controller: emailController,
+                hintText: "Email",
                 prefixIcon: const Icon(
                   Icons.person_rounded,
                   color: Colors.black12,
@@ -245,7 +245,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
                             // TODO navigate to  home screen
-
+                            BlocProvider.of<SignupLoginScreenCubit>(context)
+                                .login(
+                                    email: emailController.text.trim(),
+                                    password: passwordController.text);
                             // Navigator.pushAndRemoveUntil(
                             //   context,
                             //   MaterialPageRoute(
@@ -310,7 +313,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         child: Image.asset(
-                          "assets/icons/google.png",
+                          Assets.imagesIconsGoogle,
                         ),
                       ),
                     ),
@@ -325,7 +328,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         child: Image.asset(
-                          "assets/icons/facebook.png",
+                          Assets.imagesIconsFacebook,
                         ),
                       ),
                     )

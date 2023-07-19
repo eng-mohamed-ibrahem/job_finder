@@ -1,10 +1,8 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../controller/cubit/signup_screens_cubit/work_type_selection_cubit.dart';
 import '../../../model/signup_models/work_type_model.dart';
+import '../../screens/create_account_screens/setup_work_type_screen.dart';
 
 class InterestedWorkTypeWidget extends StatelessWidget {
   final WorkTypeModel workTypeModel;
@@ -14,9 +12,9 @@ class InterestedWorkTypeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WorkTypeSelectedCubit, bool>(
+    return BlocBuilder<CareerTypeSelectedCubit, bool>(
       buildWhen: (previous, current) {
-        if (BlocProvider.of<WorkTypeSelectedCubit>(context)
+        if (BlocProvider.of<CareerTypeSelectedCubit>(context)
                 .currentSelectedItemIndex ==
             index) {
           return true;
@@ -36,7 +34,7 @@ class InterestedWorkTypeWidget extends StatelessWidget {
           child: GestureDetector(
             onTap: () {
               workTypeModel.selected = !workTypeModel.selected;
-              BlocProvider.of<WorkTypeSelectedCubit>(context)
+              BlocProvider.of<CareerTypeSelectedCubit>(context)
                   .changeSelected(index);
             },
             child: Container(

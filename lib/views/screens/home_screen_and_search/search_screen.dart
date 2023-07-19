@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../widgets/home_and_search_screen_widgets/recent_suggest_search_jobs_widget.dart';
 import '../../widgets/home_and_search_screen_widgets/search_widget.dart';
 

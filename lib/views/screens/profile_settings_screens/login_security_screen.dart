@@ -38,7 +38,7 @@ class _LoginAndSecurityScreenState extends State<LoginAndSecurityScreen> {
               child: Text(
                 'Account access',
                 style: TextStyle(
-                  color: Color(0xffF4F4F5),
+                  color: Colors.grey,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -52,91 +52,29 @@ class _LoginAndSecurityScreenState extends State<LoginAndSecurityScreen> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             children: [
-              ListTile(
-                leading: const Text('Email address'),
-                trailing: const Row(
-                  children: [
-                    Text(''),
-                    Icon(Icons.arrow_forward_ios),
-                  ],
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ChangeEmailScreen(),
-                    ),
-                  );
-                },
-              ),
-              const Divider(
-                height: 1,
-                thickness: 1,
-                indent: 10,
-                endIndent: 10,
-              ),
-              ListTile(
-                leading: const Text('Phone number'),
-                trailing: const Row(
-                  children: [
-                    Text(''),
-                    Icon(Icons.arrow_forward_ios),
-                  ],
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PhoneNumberScreen(),
-                    ),
-                  );
-                },
-              ),
-              const Divider(
-                height: 1,
-                thickness: 1,
-                indent: 10,
-                endIndent: 10,
-              ),
-              ListTile(
-                leading: const Text('Change password'),
-                trailing: const Row(
-                  children: [
-                    Text(''),
-                    Icon(Icons.arrow_forward_ios),
-                  ],
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ChangePasswordScreen(),
-                    ),
-                  );
-                },
-              ),
-              const Divider(
-                height: 1,
-                thickness: 1,
-                indent: 10,
-                endIndent: 10,
-              ),
-              ListTile(
-                leading: const Text('Two-Step verification'),
-                trailing: const Row(
-                  children: [
-                    Text(
-                      'Not-active',
-                      style: TextStyle(
-                        color: Colors.grey,
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChangeEmailScreen(),
                       ),
-                    ),
-                    Icon(Icons.arrow_forward_ios),
-                  ],
+                    );
+                  },
+                  child: const Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Email address',
+                        ),
+                      ),
+                      Text(''),
+                      Icon(Icons.arrow_forward_ios),
+                    ],
+                  ),
                 ),
-                onTap: () {
-                  // move to Two-Step verification screen
-                },
               ),
               const Divider(
                 height: 1,
@@ -144,17 +82,114 @@ class _LoginAndSecurityScreenState extends State<LoginAndSecurityScreen> {
                 indent: 10,
                 endIndent: 10,
               ),
-              ListTile(
-                leading: const Text('Face ID'),
-                trailing: const Row(
-                  children: [
-                    Text(''),
-                    Icon(Icons.arrow_forward_ios),
-                  ],
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PhoneNumberScreen(),
+                      ),
+                    );
+                  },
+                  child: const Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Phone number',
+                        ),
+                      ),
+                      Text(''),
+                      Icon(Icons.arrow_forward_ios),
+                    ],
+                  ),
                 ),
-                onTap: () {
-                  // move to Face ID screen
-                },
+              ),
+              const Divider(
+                height: 1,
+                thickness: 1,
+                indent: 10,
+                endIndent: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChangePasswordScreen(),
+                      ),
+                    );
+                  },
+                  child: const Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Change password',
+                        ),
+                      ),
+                      Text(''),
+                      Icon(Icons.arrow_forward_ios),
+                    ],
+                  ),
+                ),
+              ),
+              const Divider(
+                height: 1,
+                thickness: 1,
+                indent: 10,
+                endIndent: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: GestureDetector(
+                  onTap: () {
+                    // move to Two-Step verification screen
+                  },
+                  child: const Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Two-Step verification',
+                        ),
+                      ),
+                      Text(
+                        'Not-active',
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Icon(Icons.arrow_forward_ios),
+                    ],
+                  ),
+                ),
+              ),
+              const Divider(
+                height: 1,
+                thickness: 1,
+                indent: 10,
+                endIndent: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: GestureDetector(
+                  onTap: () {
+                    // move to Face ID screen
+                  },
+                  child: const Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Face ID',
+                        ),
+                      ),
+                      Text(''),
+                      Icon(Icons.arrow_forward_ios),
+                    ],
+                  ),
+                ),
               ),
               const Divider(
                 height: 1,

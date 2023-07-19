@@ -6,6 +6,7 @@ import 'package:job_finder/views/screens/profile_settings_screens/login_security
 import 'package:job_finder/views/screens/profile_settings_screens/set_language_screen.dart';
 import 'package:job_finder/views/screens/profile_settings_screens/set_notification_screen.dart';
 import '../../../controller/cubit/edit_profile_screens_cubit/file_path_cubit.dart';
+import '../../../controller/utils/app_images.dart';
 import 'add_portfolio_screen.dart';
 import 'edit_profile_screen.dart';
 
@@ -120,7 +121,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               radius: 45,
                               backgroundImage: imagePath.isEmpty
                                   ? const AssetImage(
-                                      'assets/icons/default_user_profile.png')
+                                      Assets.imagesIconsDefaultUserProfile,
+                                    )
                                   : FileImage(
                                       File(
                                         imagePath,

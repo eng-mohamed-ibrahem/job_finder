@@ -1,9 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/controller/utils/dio_helper/dio_helper.dart';
 import '../../../model/signup_models/user_model.dart';
 import '../../utils/dio_helper/url_paths.dart';
+import '../../utils/sql_helper/sql_helper.dart';
 
 part 'signup_cubit_states.dart';
 
@@ -26,8 +26,8 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
     emit(ChangeButtonStyleCubitState());
   }
 
-  Response? response;
-  // sign up user with name, email and password
+  /// ! ........................................................................ ! ///
+
   void singup({
     required String email,
     required String password,
@@ -42,12 +42,14 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
           'password': password,
           'name': name,
         },
-      ).then((response) {
-        this.response = response;
+      ).then((response) async {
         if (response!.statusCode == 200) {
           var collection = response.data['data'] as Map<String, dynamic>;
-          collection.putIfAbsent('token', () => response.data['token']);
+          collection.putIfAbsent(
+              UserTableColumnTitles.token, () => response.data['token']);
+          collection[UserTableColumnTitles.login] = false;
           userModel = UserModel.fromMap(collection);
+          await _inserData();
           debugPrint(userModel.toString());
           emit(SingupSuccessCubitState());
         } else if (response.statusCode == 401) {
@@ -63,21 +65,22 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
     }
   }
 
-  // login user with email and password
   void login({
     required String email,
     required String password,
   }) async {
+    emit(SingupLoadingCubitState());
     try {
       await DioHelper.postData(endPoint: UrlPaths.login, data: {
         'email': email,
         'password': password,
-      }).then((response) {
+      }).then((response) async {
         if (response!.statusCode == 200) {
-          // update any data of user changed in database
           var collection = response.data['data'] as Map<String, dynamic>;
-          collection.update('token', (value) => response.data['token']);
+          collection.putIfAbsent('token', () => response.data['token']);
+          collection[UserTableColumnTitles.login] = true;
           userModel = UserModel.fromMap(collection);
+          await _inserData();
           emit(SingupSuccessCubitState());
         } else if (response.statusCode == 401) {
           errorMessageWhileSignup = response.data['massege'];
@@ -90,6 +93,16 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
       emit(SingupErrorCubitState());
     }
   }
+
+  Future<void> _inserData() async {
+    await SqlHelper.insertData(queryStatement: '''
+              INSERT INTO ${UserTableColumnTitles.usersTable}
+              (${UserTableColumnTitles.id}, ${UserTableColumnTitles.name}, ${UserTableColumnTitles.otp}, ${UserTableColumnTitles.email}, ${UserTableColumnTitles.createdAt}, ${UserTableColumnTitles.token}, ${UserTableColumnTitles.login})
+              VALUES (${userModel!.id}, '${userModel!.name}', ${userModel!.otp}, '${userModel!.email}', '${userModel!.createdAt}', '${userModel!.token}', ${userModel!.isLogin ? 1 : 0});
+            ''');
+  }
+
+  /// ! ........................................................................ ! ///
 
   // update the checkbox state
   updateChecked() {

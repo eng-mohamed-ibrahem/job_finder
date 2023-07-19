@@ -1,8 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:job_finder/root/root_app.dart';
+import 'package:job_finder/views/screens/home_screen_and_search/main_screen.dart';
+import '../../../controller/cubit/signup_screens_cubit/signup_login_screens_cubit.dart';
+import '../../../controller/utils/app_images.dart';
+import '../../../controller/utils/enum_active_routes_observer.dart';
+import '../../../controller/utils/shared_helper.dart';
+import '../../../controller/utils/sql_helper/sql_helper.dart';
 import '../../widgets/onboarding_screen_widgets/custom_button.dart';
 
-class AccountFinishedScreen extends StatelessWidget {
+class AccountFinishedScreen extends StatefulWidget {
   const AccountFinishedScreen({super.key});
+
+  @override
+  State<AccountFinishedScreen> createState() => _AccountFinishedScreenState();
+}
+
+class _AccountFinishedScreenState extends State<AccountFinishedScreen>
+    with RouteAware {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void didPush() {
+    BlocProvider.of<SignupLoginScreenCubit>(context).userModel!.isLogin = true;
+    SqlHelper.updateData(queryStatement: ''' 
+                          UPDATE  ${UserTableColumnTitles.usersTable} SET ${UserTableColumnTitles.login} = 1;
+                          ''');
+    SharedHelper.saveData(
+        key: SharedHelper.activeRouteKey,
+        value: ActiveRoute.accountFinished.route);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +53,7 @@ class AccountFinishedScreen extends StatelessWidget {
               height: MediaQuery.of(context).size.height * 0.2,
             ),
             Image.asset(
-              'assets/images/Success_Account.png',
+              Assets.imagesLargeImagesSuccessAccount,
             ),
             const SizedBox(
               height: 20,
@@ -47,7 +84,12 @@ class AccountFinishedScreen extends StatelessWidget {
                 text: 'Get Started',
                 fontSize: 16,
                 onPressed: () {
-                  // TODO : Navigate to home screen
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MainScreen(),
+                      ),
+                      (route) => false);
                 },
               ),
             )

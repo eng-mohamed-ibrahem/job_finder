@@ -1,4 +1,15 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:job_finder/controller/cubit/signup_screens_cubit/signup_login_screens_cubit.dart';
+import 'package:job_finder/controller/utils/enum_active_routes_observer.dart';
+import 'package:job_finder/controller/utils/shared_helper.dart';
+import 'package:job_finder/controller/utils/sql_helper/sql_helper.dart';
+import 'package:job_finder/model/signup_models/user_model.dart';
+import 'package:job_finder/views/screens/create_account_screens/setup_work_type_screen.dart';
+import '../../../controller/utils/app_images.dart';
+import '../create_account_screens/work_preferred_location_screen.dart';
+import '../home_screen_and_search/main_screen.dart';
 import 'onboarding_screen.dart';
 
 class Splash extends StatelessWidget {
@@ -6,15 +17,65 @@ class Splash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(
-      const Duration(milliseconds: 800),
-      () {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const OnBoradingScreen()),
-            (route) => false);
-      },
-    );
+    SqlHelper.tableHasData(table: UserTableColumnTitles.usersTable)
+        .then((hasUser) async {
+      if (hasUser) {
+        var userMap = Map<String, dynamic>.from((await SqlHelper.getAllRows(
+                table: UserTableColumnTitles.usersTable))
+            .first);
+        // false = 0, true = 1;
+        if (userMap[UserTableColumnTitles.login] == 1) {
+          userMap[UserTableColumnTitles.login] = true;
+          userMap[UserTableColumnTitles.careerType] =
+              jsonDecode(userMap[UserTableColumnTitles.careerType]);
+
+          userMap[UserTableColumnTitles.workLocations] =
+              jsonDecode(userMap[UserTableColumnTitles.workLocations]);
+
+          if (context.mounted) {
+            BlocProvider.of<SignupLoginScreenCubit>(context).userModel =
+                UserModel.fromMap(userMap);
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const MainScreen()),
+                (route) => false);
+          }
+        } else {
+          userMap[UserTableColumnTitles.login] = false;
+          if (context.mounted) {
+            String activeRoute = SharedHelper.getData(
+                key: SharedHelper.activeRouteKey, valueDataType: 'String');
+
+            if (activeRoute == ActiveRoute.careerType.route) {
+              BlocProvider.of<SignupLoginScreenCubit>(context).userModel =
+                  UserModel.fromMap(userMap);
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CareerTypeScreen()),
+                  (route) => false);
+            } else if (activeRoute == ActiveRoute.preferedLocations.route) {
+              userMap[UserTableColumnTitles.careerType] =
+                  jsonDecode(userMap[UserTableColumnTitles.careerType]);
+              BlocProvider.of<SignupLoginScreenCubit>(context).userModel =
+                  UserModel.fromMap(userMap);
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PreferedWorkLocationScreen()),
+                  (route) => false);
+            }
+          }
+        }
+      } else {
+        if (context.mounted) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const OnBoradingScreen()),
+              (route) => false);
+        }
+      }
+    });
     return Scaffold(
       body: Stack(
         alignment: Alignment.center,
@@ -48,7 +109,7 @@ class Splash extends StatelessWidget {
             ),
           ),
           Image.asset(
-            'assets/images/logo.png',
+            Assets.imagesLargeImagesLogo,
             width: 141,
             height: 31,
           ),

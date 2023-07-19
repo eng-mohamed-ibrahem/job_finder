@@ -3,8 +3,9 @@ class Country {
   String countryImage;
   bool selected;
 
-  Country(
-      {required this.countryName,
-      required this.countryImage,
-      this.selected = false});
+  Country({
+    required this.countryName,
+    required this.countryImage,
+    this.selected = false,
+  });
 }

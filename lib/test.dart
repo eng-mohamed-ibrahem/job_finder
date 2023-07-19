@@ -1,5 +1,5 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:job_finder/controller/utils/dio_helper/dio_helper.dart';
 
 class TestWidget extends StatefulWidget {
   const TestWidget({super.key});
@@ -29,11 +29,13 @@ class _TestWidgetState extends State<TestWidget> with RouteAware {
   }
 
   getData() async {
-    await DioHelper.getData(
-            endPoint: 'jobs',
-            token: '2718|RPTT4Gni8VSq7b2VgbGdvExDiQ5xeE9MbUJqUQ0J')
+    await Dio()
+        .postUri(
+      Uri.parse(
+          'http://167.71.79.133/api/auth/register?email=mohamed42343@gmail.com&name=mohamed1232&password=43243mlkm423'),
+    )
         .then((response) {
-      debugPrint(response!.data.toString());
+      debugPrint(response.data['data'].toString());
     });
   }
 

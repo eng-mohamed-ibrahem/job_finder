@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:job_finder/views/screens/login_screens/login_screen.dart';
 
+import '../../../controller/utils/app_images.dart';
+
 class TopTitleOnBoardingScreen extends StatelessWidget {
   const TopTitleOnBoardingScreen({super.key});
 
@@ -11,7 +13,7 @@ class TopTitleOnBoardingScreen extends StatelessWidget {
       margin: const EdgeInsets.all(10),
       child: AppBar(
         leading: Image.asset(
-          'assets/images/logo.png',
+          Assets.imagesLargeImagesLogo,
           width: 80,
           height: 20,
         ),

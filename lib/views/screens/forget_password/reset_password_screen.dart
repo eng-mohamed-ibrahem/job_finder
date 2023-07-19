@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/views/screens/forget_password/password_changed_successfully_screen.dart';
 import 'package:job_finder/views/widgets/onboarding_screen_widgets/custom_button.dart';
 
-import '../../../controller/cubit/signup_screens_cubit/signup_screens_cubit.dart';
+import '../../../controller/cubit/signup_screens_cubit/signup_login_screens_cubit.dart';
 import '../../../controller/utils/validation.dart';
 import '../../widgets/signup_screen_widget/customized_text_field.dart';
 

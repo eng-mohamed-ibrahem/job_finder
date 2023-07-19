@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:job_finder/views/widgets/onboarding_screen_widgets/custom_button.dart';
+
 import '../../../controller/utils/validation.dart';
 import '../../widgets/signup_screen_widget/customized_text_field.dart';
 
@@ -28,35 +29,40 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
       ),
       body: Form(
         key: formKey,
-        child: Column(
-          children: [
-            const Text('Main e-mail address'),
-            const SizedBox(
-              height: 20,
-            ),
-            CustomizedTextFormField(
-              controller: emailController,
-              validator: Validation.emailValidated,
-              hintText: "Email",
-              prefixIcon: const Icon(
-                Icons.email,
-                color: Colors.black12,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Main e-mail address'),
+              const SizedBox(
+                height: 10,
               ),
-              keyboardType: TextInputType.text,
-            ),
-            const Spacer(),
-            Center(
-              child: CustomButton(
-                fontSize: 16,
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {
-                    // TODO: save changes
-                  }
-                },
-                text: 'Save',
+              CustomizedTextFormField(
+                controller: emailController,
+                validator: Validation.emailValidated,
+                hintText: "Email",
+                prefixIcon: const Icon(
+                  Icons.email,
+                  color: Colors.black12,
+                ),
+                keyboardType: TextInputType.text,
               ),
-            ),
-          ],
+              const Spacer(),
+              SizedBox(
+                width: double.infinity,
+                child: CustomButton(
+                  fontSize: 16,
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      // TODO: save changes
+                    }
+                  },
+                  text: 'Save',
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

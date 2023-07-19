@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:job_finder/controller/utils/app_images.dart';
 
 class FirstOnBoradingScreen extends StatelessWidget {
   const FirstOnBoradingScreen({super.key});
@@ -11,7 +12,7 @@ class FirstOnBoradingScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Image.asset(
-              'assets/images/first_onboarding_Background.png',
+              Assets.imagesLargeImagesFirstOnboardingBackground,
               width: double.infinity,
               height: double.infinity,
               fit: BoxFit.cover,
