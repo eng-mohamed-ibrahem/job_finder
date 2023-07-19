@@ -1,16 +1,10 @@
 # job_finder
+## (Working on it)...
+JobFinder is a mobile application designed to help job seekers find suitable job opportunities quickly and easily.
+With JobFinder, users can search for jobs based on job title. 
 
-A new Flutter project.
+JobFinder simplifies the job search process by allowing users to create a profile and upload their resume, which can be used to apply for jobs directly from the app. Users can also save job listings and set up alerts for new job postings that match their preferences.
 
-## Getting Started
+In addition to job search features, JobFinder provides resources and tools to help users improve their job search skills. This includes tips on resume writing, interviewing, and networking, as well as access to industry news and career advice.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Overall, JobFinder is a comprehensive job search app that provides a one-stop-shop for job seekers looking to find their next career opportunity. With its user-friendly interface and powerful search features.
