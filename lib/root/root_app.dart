@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:job_finder/controller/cubit/job_data_cubit/job_data_cubit.dart';
 import 'package:job_finder/controller/cubit/navigation_screens_cubit/navigation_screen_cubit.dart';
 import 'package:job_finder/controller/cubit/onboarding_screen_cubit/onboard_screen_cubit.dart';
 import 'package:job_finder/views/screens/onboarding_screens/splash_screen.dart';
@@ -30,6 +31,9 @@ class Root extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => FilePathCubit(),
+        ),
+        BlocProvider(
+          create: (context) => JobDataCubit(),
         ),
       ],
       child: MaterialApp(

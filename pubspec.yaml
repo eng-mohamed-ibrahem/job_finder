@@ -48,6 +48,7 @@ flutter:
     - assets/images/icons/
     - assets/images/large_images/
     - assets/files/
+    - assets/files/jobs.json
 
 flutter_assets:
   assets_path: assets/images

@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'url_paths.dart';
+part 'url_paths.dart';
+
+
+
 
 class DioHelper {
   static late Dio dio;
@@ -24,12 +27,10 @@ class DioHelper {
   static Future<Response?> getData({
     required String endPoint,
     Map<String, dynamic>? querryParameters,
-    String? token,
+    required String token,
   }) async {
     try {
-      if (token != null) {
-        dio.options.headers['Authorization'] = 'Bearer $token';
-      }
+      dio.options.headers['Authorization'] = 'Bearer $token';
       return await dio.get(endPoint, queryParameters: querryParameters);
     } catch (e) {
       debugPrint(e.toString());
@@ -57,14 +58,6 @@ class DioHelper {
       debugPrint('diohelper--$e');
       return null;
     }
-  }
-
-  static Future<Response> post(
-      {required String endpoint, Map<String, dynamic>? queryParameters}) async {
-    return await dio.post(
-      endpoint,
-      queryParameters: queryParameters,
-    );
   }
 
   static Future<Response> deleteData({

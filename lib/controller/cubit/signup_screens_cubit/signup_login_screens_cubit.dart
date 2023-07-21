@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/controller/utils/dio_helper/dio_helper.dart';
 import '../../../model/signup_models/user_model.dart';
-import '../../utils/dio_helper/url_paths.dart';
 import '../../utils/sql_helper/sql_helper.dart';
 
 part 'signup_cubit_states.dart';

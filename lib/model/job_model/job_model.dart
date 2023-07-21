@@ -19,6 +19,7 @@ class JobModel {
   int expired;
   String createdAt;
   String updatedAt;
+  bool? isFavorite;
   JobModel({
     required this.id,
     required this.name,
@@ -38,6 +39,7 @@ class JobModel {
     required this.expired,
     required this.createdAt,
     required this.updatedAt,
+    this.isFavorite = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -60,6 +62,7 @@ class JobModel {
       'expired': expired,
       'created_at': createdAt,
       'updated_at': updatedAt,
+      'is_favorite': isFavorite ?? false,
     };
   }
 
@@ -83,6 +86,8 @@ class JobModel {
       expired: map['expired'] as int,
       createdAt: map['created_at'] as String,
       updatedAt: map['updated_at'] as String,
+      isFavorite:
+          map['is_favorite'] != null ? map['is_favorite'] as bool : false,
     );
   }
 

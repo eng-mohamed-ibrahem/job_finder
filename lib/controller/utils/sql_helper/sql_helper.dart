@@ -39,23 +39,31 @@ class SqlHelper {
         );
         ''');
 
-        // db.execute('''
-        //   CREATE TABLE Job (
-        //     id integer primary key,
-        //     title text not null,
-        //     description text not null,
-        //     company text not null,
-        //     location text not null,
-        //     salary text not null,
-        //     type text not null,
-        //     created_at text not null,
-        //     updated_at text not null,
-        //     user_id integer not null,
-        //   );
-        // ''');
+        /// for saved jobs
+        db.execute('''
+          CREATE TABLE ${SavedJobTableColumnTitles.jobTable} (
+            ${DatabseJobTableColumnTitles.jobId} INTEGER PRIMARY KEY,
+            ${DatabseJobTableColumnTitles.name} TEXT NOT NULL,
+            ${DatabseJobTableColumnTitles.image} TEXT NOT NULL,
+            ${DatabseJobTableColumnTitles.compName} TEXT NOT NULL,
+            ${SavedJobTableColumnTitles.createdAt} TEXT NOT NULL,
+          );
+        ''');
+
+        /// for applied jobs
+        db.execute('''
+          CREATE TABLE ${AppliedJobTableColumnTitles.jobTable} (
+            ${DatabseJobTableColumnTitles.jobId} INTEGER PRIMARY KEY,
+            ${DatabseJobTableColumnTitles.name} TEXT NOT NULL,
+            ${DatabseJobTableColumnTitles.image} TEXT NOT NULL,
+            ${DatabseJobTableColumnTitles.compName} TEXT NOT NULL,
+          );
+        ''');
       },
     );
   }
+
+  /// ! ..................................................... ! ///
 
   /// CRUD operation as function
   /// for people who not are familiar with SQL
@@ -93,6 +101,8 @@ class SqlHelper {
     );
   }
 
+  /// ! ..................................................... ! ///
+
   /// CRUD operation as SQL statement
   ///
   /// for people who are familiar with SQL
@@ -113,5 +123,5 @@ class SqlHelper {
     return await sqlDb.rawDelete(queryStatement);
   }
 
-  //! ..................................................... !//
+  /// ! ..................................................... ! ///
 }

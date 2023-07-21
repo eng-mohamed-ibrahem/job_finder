@@ -2,40 +2,34 @@ part of 'sql_helper.dart';
 
 /// for statndard column titles
 class UserTableColumnTitles {
-  static String usersTable = 'Users';
-  static String id = 'id';
-  static String name = 'name';
-  static String otp = 'otp';
-  static String towStep = 'tow_step';
-  static String email = 'email';
-  static String emailVerifiedAt = 'email_verified_at';
-  static String createdAt = 'created_at';
-  static String updatedAt = 'updated_at';
-  static String token = 'token';
-  static String careerType = 'work_type';
-  static String workNature = 'work_nature';
-  static String workLocations = 'work_locations';
-  static String login = 'login';
+  static const String usersTable = 'Users';
+  static const String id = 'id';
+  static const String name = 'name';
+  static const String otp = 'otp';
+  static const String towStep = 'tow_step';
+  static const String email = 'email';
+  static const String emailVerifiedAt = 'email_verified_at';
+  static const String createdAt = 'created_at';
+  static const String updatedAt = 'updated_at';
+  static const String token = 'token';
+  static const String careerType = 'work_type';
+  static const String workNature = 'work_nature';
+  static const String workLocations = 'work_locations';
+  static const String login = 'login';
 }
 
-class JobTableColumnTitles {
-  static String jobTable = 'Job';
+class SavedJobTableColumnTitles {
+  static String jobTable = 'favorite_job';
+  static String createdAt = 'created_at';
+}
+
+class AppliedJobTableColumnTitles {
+  static const String jobTable = 'applied_job';
+}
+
+class DatabseJobTableColumnTitles {
   static String jobId = 'job_id';
   static String name = 'name';
   static String image = 'image';
-  static String jobTimeType = 'job_time_type';
-  static String jobType = 'job_type';
-  static String jobLevel = 'job_level';
-  static String jobDescription = 'job_description';
-  static String jobSkill = 'job_skill';
   static String compName = 'comp_name';
-  static String compEmail = 'comp_email';
-  static String compWebsite = 'comp_website';
-  static String aboutComp = 'about_comp';
-  static String location = 'location';
-  static String salary = 'salary';
-  static String favorites = 'favorites';
-  static String expired = 'expired';
-  static String createdAt = 'created_at';
-  static String updatedAt = 'updated_at';
 }
