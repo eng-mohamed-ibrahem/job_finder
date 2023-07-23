@@ -16,6 +16,8 @@ class UserTableColumnTitles {
   static const String workNature = 'work_nature';
   static const String workLocations = 'work_locations';
   static const String login = 'login';
+  static const String profileImage = 'profile_image';
+  static const String mobile = 'mobile';
 }
 
 class SavedJobTableColumnTitles {

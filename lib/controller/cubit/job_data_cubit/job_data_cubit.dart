@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/controller/utils/dio_helper/dio_helper.dart';
 import '../../../model/job_model/databse_job_model.dart';
 import '../../../model/job_model/job_model.dart';
+import '../../../model/signup_models/user_model.dart';
 import '../../utils/sql_helper/sql_helper.dart';
 
 part 'job_data_cubit_states.dart';
@@ -53,12 +55,47 @@ class JobDataCubit extends Cubit<JobDataState> {
     }
   }
 
+  Future applyToJob({
+    required JobModel job,
+    required UserModel user,
+    required String filePath,
+  }) async {
+    emit(AppliedJobDataLoading());
+    try {
+      await DioHelper.postData(
+        endPoint: UrlPaths.applyToJob,
+        token: user.token,
+        data: {
+          'cv_file': await MultipartFile.fromFile(
+            filePath,
+            filename: filePath.split('/').last,
+          ),
+          'name': user.name,
+          'email': user.email,
+          'mobile': user.mobile,
+          'user_id': user.id,
+          'job_id': job.id,
+          'work_type': job.jobType,
+          'other_file': 'no_file'
+        },
+      ).then(
+        (response) {
+          if (response!.statusCode == 200) {
+            emit(AppliedJobDataSuccess());
+          }
+        },
+      );
+    } catch (e) {
+      emit(AppliedJobDataError());
+    }
+  }
+
   /// insert in realtime and database
   Future<bool> saveJob(JobModel job) async {
     emit(SaveJobDataLoading());
     try {
-      job.isFavorite = !job.isFavorite!;
       // save in realtime list
+      job.isFavorite = true;
       DatabaseJobModel savedJobModel = DatabaseJobModel(
         id: job.id,
         name: job.name,
@@ -85,14 +122,11 @@ class JobDataCubit extends Cubit<JobDataState> {
     emit(SaveJobDataLoading());
     try {
       // delete from realtime list
-      savedJobs.remove(
-        DatabaseJobModel(
-          id: job.id,
-          name: job.name,
-          image: job.image,
-          compName: job.compName,
-          createdAt: job.createdAt,
-        ),
+      job.isFavorite = false;
+      savedJobs.removeWhere(
+        (element) {
+          return element.id == job.id;
+        },
       );
       // delete from database
       await SqlHelper.deleteData(queryStatement: '''

@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,9 +7,9 @@ import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:job_finder/views/widgets/onboarding_screen_widgets/custom_button.dart';
+
 import '../../../controller/cubit/edit_profile_screens_cubit/file_path_cubit.dart';
 import '../../../controller/utils/app_images.dart';
-import '../../../controller/utils/methods.dart';
 import '../../widgets/signup_screen_widget/customized_text_field.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -64,7 +65,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     children: [
                       BlocBuilder<FilePathCubit, FilePathCubitState>(
                         buildWhen: (previous, current) {
-                          if (current is ImagePathCubitState) {
+                          if (current is ImageFilePathCubitState) {
                             return true;
                           }
                           return false;
@@ -89,7 +90,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       const SizedBox(height: 5),
                       GestureDetector(
                         onTap: () {
-                          pickImage(context);
+                          popUpImageSelection();
                         },
                         child: const Text(
                           'Change Photo',
@@ -280,7 +281,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       if (_formKey.currentState!.validate() &&
                           _phoneNumber != null &&
                           _phoneNumber!.isValidNumber()) {
-                        // TODO: Add function to save the data
+                        // TODO: Add to API
                       }
                     },
                     text: 'Save',
@@ -291,6 +292,56 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void popUpImageSelection() {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: SizedBox(
+            height: 60,
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    BlocProvider.of<FilePathCubit>(context)
+                        .setImageFromCamera();
+                  },
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Image.asset(Assets.imagesIconsCameraPicker),
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    BlocProvider.of<FilePathCubit>(context)
+                        .setImageFromGallery();
+                  },
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Image.asset(Assets.imagesIconsGalleryPicker),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

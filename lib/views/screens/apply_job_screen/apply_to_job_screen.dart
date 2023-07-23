@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/controller/cubit/edit_profile_screens_cubit/file_path_cubit.dart';
+import 'package:job_finder/controller/cubit/job_data_cubit/job_data_cubit.dart';
+import 'package:job_finder/controller/cubit/signup_screens_cubit/signup_login_screens_cubit.dart';
+import 'package:job_finder/views/screens/apply_job_screen/data_sent_complete_screen.dart';
 import 'package:job_finder/views/widgets/profile_settings_widgets/portfolio_widget.dart';
 
-import '../../../controller/cubit/signup_screens_cubit/signup_login_screens_cubit.dart';
 import '../../../controller/utils/app_images.dart';
+import '../../../model/job_model/job_model.dart';
+import '../../widgets/onboarding_screen_widgets/custom_button.dart';
 
-class AddPortfolioScreen extends StatefulWidget {
-  const AddPortfolioScreen({super.key});
+class ApplyToJobScreen extends StatefulWidget {
+  const ApplyToJobScreen({super.key, required this.job});
+  final JobModel job;
 
   @override
-  State<AddPortfolioScreen> createState() => _AddPortfolioScreenState();
+  State<ApplyToJobScreen> createState() => _ApplyToJobScreenState();
 }
 
-class _AddPortfolioScreenState extends State<AddPortfolioScreen> {
+class _ApplyToJobScreenState extends State<ApplyToJobScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Portfolio'),
+        title: const Text(
+          'Apply Job',
+          style: TextStyle(
+            color: Color.fromRGBO(17, 24, 39, 1),
+          ),
+        ),
         centerTitle: true,
       ),
       body: Padding(
@@ -46,7 +56,7 @@ class _AddPortfolioScreenState extends State<AddPortfolioScreen> {
                       height: 20,
                     ),
                     const Text(
-                      'Upload your Portfolio',
+                      'Upload your CV',
                       style: TextStyle(
                         color: Color.fromRGBO(17, 24, 39, 1),
                         fontSize: 18,
@@ -107,7 +117,7 @@ class _AddPortfolioScreenState extends State<AddPortfolioScreen> {
                               width: 10,
                             ),
                             Text(
-                              'Add file',
+                              'Select file',
                               style: TextStyle(
                                 color: Color.fromRGBO(51, 102, 255, 1),
                                 fontSize: 14,
@@ -127,12 +137,28 @@ class _AddPortfolioScreenState extends State<AddPortfolioScreen> {
             ),
             BlocBuilder<FilePathCubit, FilePathCubitState>(
               buildWhen: (previous, current) {
-                if (current is PortfolioCubitState) {
+                if (current is PortfolioCubitState ||
+                    current is PortfolioDownloadCubitLoadingState ||
+                    current is PortfolioDownloadCubitCompleteState ||
+                    current is PortfolioDownloadCubitErrorState ||
+                    current is SelectedFilePathCubitState) {
                   return true;
                 }
                 return false;
               },
               builder: (context, state) {
+                if (state is PortfolioDownloadCubitLoadingState) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (state is PortfolioDownloadCubitErrorState) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Error while downloading file'),
+                    ),
+                  );
+                }
                 var files = BlocProvider.of<FilePathCubit>(context).files;
                 return Expanded(
                   child: ListView.builder(
@@ -140,15 +166,87 @@ class _AddPortfolioScreenState extends State<AddPortfolioScreen> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child: PortfolioWidget(
-                          index: index,
+                        child: InkWell(
+                          onTap: () {
+                            BlocProvider.of<FilePathCubit>(context).selectFile =
+                                index;
+                          },
+                          child: Container(
+                            color: BlocProvider.of<FilePathCubit>(context)
+                                        .selectedFileIndex ==
+                                    index
+                                ? const Color.fromRGBO(214, 228, 255, 1)
+                                : Colors.transparent,
+                            child: PortfolioWidget(
+                              index: index,
+                            ),
+                          ),
                         ),
                       );
                     },
                   ),
                 );
               },
-            )
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: BlocConsumer<FilePathCubit, FilePathCubitState>(
+                listener: (context, state) {
+                  if (state is AppliedJobDataSuccess) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DataSentSuccessfully(),
+                      ),
+                    );
+                  }
+                  if (state is PortfolioUploadCubitErrorState ||
+                      state is AppliedJobDataError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Error while uploading file'),
+                      ),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if (state is PortfolioUploadCubitLoadingState ||
+                      state is AppliedJobDataLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return CustomButton(
+                    fontSize: 16,
+                    text: 'Sumbit',
+                    onPressed: () {
+                      var selectedFileIndex =
+                          BlocProvider.of<FilePathCubit>(context)
+                              .selectedFileIndex;
+                      if (selectedFileIndex != -1) {
+                        var files =
+                            BlocProvider.of<FilePathCubit>(context).files;
+                        BlocProvider.of<JobDataCubit>(context).applyToJob(
+                          job: widget.job,
+                          user: BlocProvider.of<SignupLoginScreenCubit>(context)
+                              .userModel!,
+                          filePath: files[selectedFileIndex].path,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please select file'),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

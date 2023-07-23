@@ -44,7 +44,7 @@ class _PortfolioWidgetState extends State<PortfolioWidget> {
         ),
         subtitle: BlocBuilder<FilePathCubit, FilePathCubitState>(
           buildWhen: (previous, current) {
-            if (current is PdfPathCubitState) {
+            if (current is PortfolioCubitState) {
               return true;
             }
             return false;
@@ -69,9 +69,6 @@ class _PortfolioWidgetState extends State<PortfolioWidget> {
             BlocProvider.of<FilePathCubit>(context).removePdfFile(widget.index);
           },
         ),
-        onTap: () {
-          // may be open the file or edit the file by the path of the file
-        },
       ),
     );
   }

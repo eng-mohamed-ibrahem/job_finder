@@ -45,7 +45,8 @@ class _PreferedWorkLocationScreenState extends State<PreferedWorkLocationScreen>
   @override
   void didPush() {
     SharedHelper.saveData(
-        key: SharedHelper.activeRouteKey, value: ActiveRoute.preferedLocations.route);
+        key: SharedHelper.activeRouteKey,
+        value: ActiveRoute.preferedLocations.route);
   }
 
   @override
@@ -107,7 +108,6 @@ class _PreferedWorkLocationScreenState extends State<PreferedWorkLocationScreen>
                           children: [
                             GestureDetector(
                               onTap: () {
-                                // change color of widget
                                 context
                                     .read<WorkTypeNature>()
                                     .changeSelectedIndex(0);
@@ -138,7 +138,6 @@ class _PreferedWorkLocationScreenState extends State<PreferedWorkLocationScreen>
                             ),
                             GestureDetector(
                               onTap: () {
-                                // change color of widget
                                 context
                                     .read<WorkTypeNature>()
                                     .changeSelectedIndex(1);

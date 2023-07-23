@@ -21,3 +21,9 @@ class SingupErrorCubitState extends SignupCubitState {}
 class GetDataFromStorageLoadingCubitState extends SignupCubitState {}
 
 class GetDataFromStorageSuccessCubitState extends SignupCubitState {}
+
+class UpdateUserDataLoadingCubitState extends SignupCubitState {}
+
+class UpdateUserDataSuccessCubitState extends SignupCubitState {}
+
+class UpdateUserDataErrorCubitState extends SignupCubitState {}

@@ -2,7 +2,7 @@
     {
         "id": 3,
         "name": "Flutter Developer",
-        "image": "public/image/1683470153.flutter.png",
+        "image": "assets/images/icons/asus.png",
         "job_time_type": "Part time",
         "job_type": "Flutter Developer",
         "job_level": "junior",
@@ -23,7 +23,7 @@
     {
         "id": 1,
         "name": "Full Stack",
-        "image": "public/image/1683469798.fullstack.png",
+        "image": "assets/images/icons/corporation.png",
         "job_time_type": "Full time",
         "job_type": "Full Stack Developer",
         "job_level": "junior",
@@ -44,7 +44,7 @@
     {
         "id": 2,
         "name": "Product Designer",
-        "image": "public/image/1683470153.flutter.png",
+        "image": "assets/images/icons/zoom_logo.png",
         "job_time_type": "Full time",
         "job_type": "Product Designer",
         "job_level": "senior",
@@ -65,7 +65,7 @@
     {
         "id": 4,
         "name": "Senior UI Designer",
-        "image": "public/image/1683470153.flutter.png",
+        "image": "assets/images/icons/tv-box.png",
         "job_time_type": "Part time",
         "job_type": "Senior UI Designer",
         "job_level": "senior",
@@ -86,7 +86,7 @@
     {
         "id": 5,
         "name": "Senior UX Designer",
-        "image": "public/image/1683470153.flutter.png",
+        "image": "assets/images/icons/tencent.png",
         "job_time_type": "Full time",
         "job_type": "Senior UX Designer",
         "job_level": "senior",
@@ -107,7 +107,7 @@
     {
         "id": 6,
         "name": "Flutter Developer",
-        "image": "public/image/1683470153.flutter.png",
+        "image": "assets/images/icons/discord_logo.png",
         "job_time_type": "Part time",
         "job_type": "Flutter Developer",
         "job_level": "junior",
@@ -126,7 +126,7 @@
         "saved": false
     },
     {
-        "id": 3,
+        "id": 7,
         "name": "Flutter Developer",
         "image": "public/image/1683470153.flutter.png",
         "job_time_type": "Part time",
@@ -147,7 +147,7 @@
         "saved": false
     },
     {
-        "id": 3,
+        "id": 8,
         "name": "Flutter Developer",
         "image": "public/image/1683470153.flutter.png",
         "job_time_type": "Part time",
@@ -168,7 +168,7 @@
         "saved": false
     },
     {
-        "id": 3,
+        "id": 9,
         "name": "Flutter Developer",
         "image": "public/image/1683470153.flutter.png",
         "job_time_type": "Part time",
@@ -181,28 +181,7 @@
         "comp_website": "https://amit-learning.com/home",
         "about_comp": "AMIT, Association Of Management and Information Technology, is a rapidly growing company which was established in Egypt from 2011 specialized in embedded systems.",
         "location": "El Salam Tower, Cornish El Maadi, Next to El Salam International Hospital, Cairo , Egypt.",
-        "salary": "10k-35k",
-        "favorites": 737,
-        "expired": 0,
-        "created_at": "2023-05-07, 14:35",
-        "updated_at": "2023-07-19T06:26:00.000000Z",
-        "saved": false
-    },
-    {
-        "id": 3,
-        "name": "Flutter Developer",
-        "image": "public/image/1683470153.flutter.png",
-        "job_time_type": "Part time",
-        "job_type": "Flutter Developer",
-        "job_level": "junior",
-        "job_description": "Flutter Developer is responsible for running and designing product application features across multiple devices across platforms. Flutter is Google's UI toolkit for building beautiful, natively compiled apps for mobile, web, and desktop from a single codebase.",
-        "job_skill": "Dart, RESTful APIs,",
-        "comp_name": "AMIT",
-        "comp_email": "Amit@amit-learning.com",
-        "comp_website": "https://amit-learning.com/home",
-        "about_comp": "AMIT, Association Of Management and Information Technology, is a rapidly growing company which was established in Egypt from 2011 specialized in embedded systems.",
-        "location": "El Salam Tower, Cornish El Maadi, Next to El Salam International Hospital, Cairo , Egypt.",
-        "salary": "10k-35k",
+        "salary": "10k",
         "favorites": 737,
         "expired": 0,
         "created_at": "2023-05-07, 14:35",
@@ -211,8 +190,29 @@
     },
     {
         "id": 10,
+        "name": "Backend Developer",
+        "image": "assets/images/icons/tv-box.png",
+        "job_time_type": "Part time",
+        "job_type": "Backend Developer",
+        "job_level": "junior",
+        "job_description": "Backend Developer is responsible for running and designing product application features across multiple devices across platforms. Backend Developer is Google's UI toolkit for building beautiful, natively compiled apps for mobile, web, and desktop from a single codebase",
+        "job_skill": "PHP, Laravel, MySQL, Node.js, JavaScript and AngularJS, MongoDB",
+        "comp_name": "TV BOX",
+        "comp_email": "https://zobjobs.com/company/false",
+        "comp_website": "https://zobjobs.com/job/senior-python-developer-job-in-canada-zj6hqpui273m",
+        "about_comp": "TV BOX is a global technology and digital recruitment specialist. We are the largest independently-owned and operated recruitment business in the world. We are confident that, together, we can find the right role for you.",
+        "location": "El Salam Tower, Cornish El Maadi, Next to El Salam International Hospital, Cairo , Egypt.",
+        "salary": "15k",
+        "favorites": 737,
+        "expired": 0,
+        "created_at": "2023-05-07, 14:35",
+        "updated_at": "2023-07-19T06:26:00.000000Z",
+        "saved": false
+    },
+    {
+        "id": 11,
         "name": "D365 BC Developer",
-        "image": "public/image/1683470153.flutter.png",
+        "image": "assets/images/icons/corporation.png",
         "job_time_type": "Full time",
         "job_type": "Python Developer",
         "job_level": "junior",
@@ -233,7 +233,7 @@
     {
         "id": 12,
         "name": "Software Engineer",
-        "image": "public/image/1683470153.flutter.png",
+        "image": "assets/images/icons/discord_logo.png",
         "job_time_type": "Full time",
         "job_type": "Backend Developer",
         "job_level": "junior",
@@ -254,7 +254,7 @@
     {
         "id": 13,
         "name": "Software Engineer",
-        "image": "public/image/1683470153.flutter.png",
+        "image": "assets/images/icons/discord_logo.png",
         "job_time_type": "Part time",
         "job_type": "Frontend Developer",
         "job_level": "junior",
@@ -275,7 +275,7 @@
     {
         "id": 14,
         "name": "Senior Python developer",
-        "image": "public/image/1683470153.flutter.png",
+        "image": "assets/images/icons/docker.png",
         "job_time_type": "Full time",
         "job_type": "Backend Developer",
         "job_level": "senior",
@@ -296,7 +296,7 @@
     {
         "id": 17,
         "name": "System Engineer",
-        "image": "public/image/1683470153.flutter.png",
+        "image": "assets/images/icons/zoom_logo.png",
         "job_time_type": "Full time",
         "job_type": "System Engineer",
         "job_level": "senior",

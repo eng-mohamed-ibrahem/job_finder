@@ -93,15 +93,18 @@ class _JobTitleWidgetState extends State<JobTitleWidget> {
                     child: CircularProgressIndicator(),
                   );
                 }
-                return InkWell(
-                  onTap: () {
-                    BlocProvider.of<JobDataCubit>(context)
-                        .saveJob(widget.jobModel);
+                return IconButton(
+                  color:
+                      widget.jobModel.isFavorite! ? Colors.blue : Colors.grey,
+                  onPressed: () {
+                    !widget.jobModel.isFavorite!
+                        ? BlocProvider.of<JobDataCubit>(context)
+                            .saveJob(widget.jobModel)
+                        : BlocProvider.of<JobDataCubit>(context)
+                            .deleteSavedJob(widget.jobModel);
                   },
-                  child: Icon(
+                  icon: const Icon(
                     FontAwesomeIcons.bookmark,
-                    color:
-                        widget.jobModel.isFavorite! ? Colors.blue : Colors.grey,
                   ),
                 );
               },

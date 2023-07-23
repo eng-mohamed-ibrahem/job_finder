@@ -2,9 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 part 'url_paths.dart';
 
-
-
-
 class DioHelper {
   static late Dio dio;
 
@@ -56,6 +53,28 @@ class DioHelper {
       );
     } catch (e) {
       debugPrint('diohelper--$e');
+      return null;
+    }
+  }
+
+  static Future<Response?> putData({
+    required String endPoint,
+    required String token,
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    try {
+      dio.options.headers['Content-Type'] = {
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+      return await dio.put(
+        endPoint,
+        queryParameters: queryParameters,
+        data: data,
+      );
+    } catch (e) {
+      debugPrint(e.toString());
       return null;
     }
   }

@@ -108,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         left: MediaQuery.of(context).size.width / 2.0 - 45,
                         child: BlocBuilder<FilePathCubit, FilePathCubitState>(
                           buildWhen: (previous, current) {
-                            if (current is ImagePathCubitState) {
+                            if (current is ImageFilePathCubitState) {
                               return true;
                             }
                             return false;

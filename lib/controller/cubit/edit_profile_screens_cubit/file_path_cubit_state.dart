@@ -6,14 +6,26 @@ class FilePathCubitInitialState extends FilePathCubitState {}
 
 // !----------------------------------------! //
 
-class ImagePathCubitState extends FilePathCubitState {}
+class ImageFilePathCubitState extends FilePathCubitState {}
 
-class PdfPathCubitState extends FilePathCubitState {}
+class PortfolioCubitState extends FilePathCubitState {}
 
 // !----------------------------------------! //
 
-class FilePathCubitLoadingSizeState extends FilePathCubitState {}
+class PortfolioUploadCubitLoadingState extends FilePathCubitState {}
 
-class FilePathCubitCompleteSizeState extends FilePathCubitState {}
+class PortfolioUploadCubitCompleteState extends FilePathCubitState {}
 
-class FilePathCubitErrorState extends FilePathCubitState {}
+class PortfolioUploadCubitErrorState extends FilePathCubitState {}
+
+// !----------------------------------------! //
+
+class PortfolioDownloadCubitLoadingState extends FilePathCubitState {}
+
+class PortfolioDownloadCubitCompleteState extends FilePathCubitState {}
+
+class PortfolioDownloadCubitErrorState extends FilePathCubitState {}
+
+// !----------------------------------------! //
+
+class SelectedFilePathCubitState extends FilePathCubitState {}

@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import '../../controller/utils/sql_helper/sql_helper.dart';
 
@@ -15,6 +14,8 @@ class UserModel {
   List<String>? careerType;
   String? workNature;
   List<String>? workLocations;
+  String? profileImage;
+  String? mobile;
   bool isLogin;
   UserModel({
     required this.id,
@@ -30,6 +31,8 @@ class UserModel {
     this.workNature,
     this.workLocations,
     this.isLogin = false,
+    this.profileImage,
+    this.mobile,
   });
 
   Map<String, dynamic> toMap() {
@@ -47,6 +50,8 @@ class UserModel {
       UserTableColumnTitles.workNature: workNature,
       UserTableColumnTitles.workLocations: workLocations,
       UserTableColumnTitles.login: isLogin,
+      UserTableColumnTitles.profileImage: profileImage,
+      UserTableColumnTitles.mobile: mobile,
     };
   }
 
@@ -77,6 +82,12 @@ class UserModel {
           ? map[UserTableColumnTitles.workLocations] as List<String>
           : null,
       isLogin: map[UserTableColumnTitles.login] as bool,
+      profileImage: map[UserTableColumnTitles.profileImage] != null
+          ? map[UserTableColumnTitles.profileImage] as String
+          : null,
+      mobile: map[UserTableColumnTitles.mobile] != null
+          ? map[UserTableColumnTitles.mobile] as String
+          : null,
     );
   }
 
@@ -87,6 +98,6 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, otp: $otp, towStep: $towStep, email: $email, emailVerifiedAt: $emailVerifiedAt, createdAt: $createdAt, updatedAt: $updatedAt, token: $token, careerType: $careerType, workNature: $workNature, workLocations: $workLocations)';
+    return 'UserModel(id: $id, name: $name, otp: $otp, towStep: $towStep, email: $email, emailVerifiedAt: $emailVerifiedAt, createdAt: $createdAt, updatedAt: $updatedAt, token: $token, careerType: $careerType, workNature: $workNature, workLocations: $workLocations, profileImage: $profileImage, mobile: $mobile, isLogin: $isLogin)';
   }
 }

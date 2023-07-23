@@ -6,11 +6,11 @@ import 'package:job_finder/views/screens/apply_job_screen/job_details_screen.dar
 import 'package:job_finder/views/screens/home_screen_and_search/search_screen.dart';
 import 'package:job_finder/views/widgets/home_and_search_screen_widgets/job_title_widget.dart';
 import 'package:job_finder/views/widgets/home_and_search_screen_widgets/search_widget.dart';
-
 import '../../../controller/cubit/job_data_cubit/job_data_cubit.dart';
 import '../../widgets/home_and_search_screen_widgets/home_screen_title.dart';
 import '../../widgets/home_and_search_screen_widgets/suggest_headline_job.dart';
 import '../../widgets/onboarding_screen_widgets/custom_button.dart';
+import '../apply_job_screen/recent_jobs_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -116,8 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const JobDetailsScreen(),
+                                      builder: (context) => JobDetailsScreen(
+                                        jobModel: jobs[index],
+                                      ),
                                     ),
                                   );
                                 },
@@ -145,7 +146,12 @@ class _HomeScreenState extends State<HomeScreen> {
             SuggestHeadlineJob(
               text: 'Recent Jobs',
               onPressed: () {
-                /// navigate to recent jobs screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RecentJobsScreen(),
+                  ),
+                );
               },
             ),
             const SizedBox(
@@ -165,9 +171,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (state is RecentJobDataError) {
-                  return const Center(
-                    child: Text('Something Unexpected Happened!'),
+                }
+                if (state is RecentJobDataError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Something Unexpected Happened!'),
+                    ),
                   );
                 }
                 var jobs = BlocProvider.of<JobDataCubit>(context).recentJobs;
@@ -179,12 +188,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: 3,
                     itemBuilder: (context, index) {
                       return InkWell(
+                        /// handle this if tapped on save job button and trigger [JobDetailsScreen] instead
                         onTap: () {
-                          // naviate with jobModel
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const JobDetailsScreen(),
+                              builder: (context) => JobDetailsScreen(
+                                jobModel: jobs[index],
+                              ),
                             ),
                           );
                         },
@@ -195,12 +206,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(width: 1),
                           ),
-                          child: Column(
-                            children: [
-                              JobTitleWidget(
-                                jobModel: jobs[index],
-                              ),
-                            ],
+                          child: JobTitleWidget(
+                            jobModel: jobs[index],
                           ),
                         ),
                       );

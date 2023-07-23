@@ -35,7 +35,8 @@ class SqlHelper {
           ${UserTableColumnTitles.otp} INTEGER NULL, ${UserTableColumnTitles.token} TEXT NOT NULL, ${UserTableColumnTitles.towStep} TEXT NULL, 
           ${UserTableColumnTitles.emailVerifiedAt} TEXT NULL, ${UserTableColumnTitles.createdAt} TEXT NULL,
           ${UserTableColumnTitles.updatedAt} TEXT NULL, ${UserTableColumnTitles.careerType} TEXT NULL, ${UserTableColumnTitles.workNature} TEXT NULL,
-          ${UserTableColumnTitles.workLocations} TEXT NULL, ${UserTableColumnTitles.login} INTEGER NOT NULL
+          ${UserTableColumnTitles.workLocations} TEXT NULL, ${UserTableColumnTitles.login} INTEGER NOT NULL,
+          ${UserTableColumnTitles.profileImage} TEXT NULL, ${UserTableColumnTitles.mobile} TEXT NULL
         );
         ''');
 

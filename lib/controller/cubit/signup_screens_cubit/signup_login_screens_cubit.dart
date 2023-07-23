@@ -27,6 +27,67 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
 
   /// ! ........................................................................ ! ///
 
+  Future updateUserData({
+    String? name,
+    String? password,
+    String? mobile,
+    String? bio,
+    String? address,
+  }) async {
+    emit(UpdateUserDataLoadingCubitState());
+    try {
+      if (name != null || password != null) {
+        Map<String, dynamic> namePassword = {};
+        if (name != null) {
+          namePassword.putIfAbsent('name', () => name);
+        }
+        if (password != null) {
+          namePassword.putIfAbsent('password', () => password);
+        }
+        await DioHelper.putData(
+          endPoint: UrlPaths.updateNPProfile,
+          token: userModel!.token,
+          data: namePassword,
+        ).then(
+          (response) async {
+            if (response!.statusCode == 200) {
+              userModel!.name = name!;
+              await SqlHelper.updateData(queryStatement: ''' 
+            UPDATE ${UserTableColumnTitles.usersTable} SET ${UserTableColumnTitles.name} = '${userModel!.name}';
+            ''');
+              emit(UpdateUserDataSuccessCubitState());
+            }
+          },
+        );
+      }
+      if (mobile != null || bio != null || address != null) {
+        await DioHelper.putData(
+            endPoint: '${UrlPaths.updateMBAProfile}${userModel!.id}',
+            token: userModel!.token,
+            queryParameters: {
+              'mobile': mobile ?? userModel!.mobile,
+              'bio': bio,
+              'address': address,
+            }).then(
+          (response) async {
+            if (response!.statusCode == 200) {
+              userModel!.mobile = mobile;
+              await SqlHelper.updateData(queryStatement: ''' 
+            UPDATE ${UserTableColumnTitles.usersTable} SET ${UserTableColumnTitles.mobile} = '${userModel!.mobile}';
+            ''');
+              emit(UpdateUserDataSuccessCubitState());
+            }
+          },
+        );
+      }
+    } on Exception catch (e) {
+      debugPrint('cubit-$e');
+      emit(UpdateUserDataErrorCubitState());
+    }
+  }
+
+  /// ! ........................................................................ ! ///
+
   void singup({
     required String email,
     required String password,
