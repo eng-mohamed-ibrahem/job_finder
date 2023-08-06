@@ -1,11 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:job_finder/controller/cubit/signup_screens_cubit/signup_login_screens_cubit.dart';
 import 'package:job_finder/views/screens/apply_job_screen/job_details_screen.dart';
 import 'package:job_finder/views/screens/home_screen_and_search/search_screen.dart';
 import 'package:job_finder/views/widgets/home_and_search_screen_widgets/job_title_widget.dart';
 import 'package:job_finder/views/widgets/home_and_search_screen_widgets/search_widget.dart';
+
 import '../../../controller/cubit/job_data_cubit/job_data_cubit.dart';
 import '../../widgets/home_and_search_screen_widgets/home_screen_title.dart';
 import '../../widgets/home_and_search_screen_widgets/suggest_headline_job.dart';
@@ -21,12 +21,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  initState() {
+    super.initState();
+    BlocProvider.of<JobDataCubit>(context).getRecentJobs();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    BlocProvider.of<JobDataCubit>(context).getSuggestedJobData(
-      token: BlocProvider.of<SignupLoginScreenCubit>(context).userModel!.token,
-    );
-    BlocProvider.of<JobDataCubit>(context).getRecentJobs();
   }
 
   @override
@@ -72,9 +74,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             BlocBuilder<JobDataCubit, JobDataState>(
               buildWhen: (previous, current) {
-                if (current is SuggestJobDataSuccess ||
-                    current is SuggestJobDataError ||
-                    current is SuggestJobDataLoading) {
+                if (current is RecentJobDataSuccess ||
+                    current is RecentJobDataError ||
+                    current is RecentJobDataLoading) {
                   return true;
                 }
                 return false;
@@ -89,9 +91,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text('Something Unexpected Happened!'),
                   );
                 }
-                var jobs = BlocProvider.of<JobDataCubit>(context).suggestedJobs;
+                var jobs = BlocProvider.of<JobDataCubit>(context).recentJobs;
                 return CarouselSlider.builder(
-                  itemCount: jobs.length,
+                  itemCount: 3,
                   itemBuilder: (context, index, realIndex) {
                     return Container(
                       margin: const EdgeInsets.all(5),
@@ -132,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   options: CarouselOptions(
                     enableInfiniteScroll: true,
                     viewportFraction: .8,
-                    height: 190,
+                    height: 230,
                     reverse: true,
                     scrollDirection: Axis.horizontal,
                     padEnds: true,
@@ -157,7 +159,16 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 10,
             ),
-            BlocBuilder<JobDataCubit, JobDataState>(
+            BlocConsumer<JobDataCubit, JobDataState>(
+              listener: (context, state) {
+                if (state is RecentJobDataError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Something Unexpected Happened!'),
+                    ),
+                  );
+                }
+              },
               buildWhen: (previous, current) {
                 if (current is RecentJobDataSuccess ||
                     current is RecentJobDataError ||
@@ -172,13 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: CircularProgressIndicator(),
                   );
                 }
-                if (state is RecentJobDataError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Something Unexpected Happened!'),
-                    ),
-                  );
-                }
+
                 var jobs = BlocProvider.of<JobDataCubit>(context).recentJobs;
                 return SizedBox(
                   height: 400,

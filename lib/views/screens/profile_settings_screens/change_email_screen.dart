@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:job_finder/controller/cubit/signup_screens_cubit/signup_login_screens_cubit.dart';
 import 'package:job_finder/views/widgets/onboarding_screen_widgets/custom_button.dart';
 
 import '../../../controller/utils/validation.dart';
@@ -51,14 +53,42 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
               const Spacer(),
               SizedBox(
                 width: double.infinity,
-                child: CustomButton(
-                  fontSize: 16,
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      // TODO: save changes
+                child: BlocConsumer<SignupLoginScreenCubit, SignupCubitState>(
+                  listener: (context, state) {
+                    if (state is UpdateUserDataSuccessCubitState) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Email updated successfully!'),
+                        ),
+                      );
+                    }
+                    if (state is UpdateUserDataErrorCubitState) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Something went wrong!s'),
+                        ),
+                      );
                     }
                   },
-                  text: 'Save',
+                  builder: (context, state) {
+                    if (state is UpdateUserDataLoadingCubitState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return CustomButton(
+                      fontSize: 16,
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          BlocProvider.of<SignupLoginScreenCubit>(context)
+                              .updateUserData(
+                            email: emailController.text.trim(),
+                          );
+                        }
+                      },
+                      text: 'Save',
+                    );
+                  },
                 ),
               ),
             ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:job_finder/views/screens/home_screen_and_search/main_screen.dart';
+
 import '../../../controller/cubit/signup_screens_cubit/signup_login_screens_cubit.dart';
 import '../../../controller/utils/app_images.dart';
 import '../../../controller/utils/validation.dart';
@@ -217,48 +219,72 @@ class _LoginScreenState extends State<LoginScreen> {
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: BlocBuilder<SignupLoginScreenCubit, SignupCubitState>(
+                child: BlocConsumer<SignupLoginScreenCubit, SignupCubitState>(
+                  listener: (context, state) {
+                    if (state is SingupSuccessCubitState) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Login Successfully'),
+                        ),
+                      );
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MainScreen(),
+                        ),
+                        (route) => false,
+                      );
+                    }
+                    if (state is SingupErrorCubitState) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('something went wrong!'),
+                        ),
+                      );
+                    }
+                  },
                   buildWhen: (previous, current) {
-                    if (current is ChangeButtonStyleCubitState) {
+                    if (current is ChangeButtonStyleCubitState ||
+                        current is SingupLoadingCubitState ||
+                        current is SingupSuccessCubitState ||
+                        current is SingupErrorCubitState) {
                       return true;
                     } else {
                       return false;
                     }
                   },
                   builder: (context, state) {
+                    if (state is SingupLoadingCubitState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
                     return CustomButton(
-                        fontSize: 16,
-                        backgroundColor:
-                            !BlocProvider.of<SignupLoginScreenCubit>(context)
-                                    .changed
-                                ? const MaterialStatePropertyAll(
-                                    Color.fromRGBO(209, 213, 219, 1),
-                                  )
-                                : const MaterialStatePropertyAll(
-                                    Color.fromRGBO(51, 102, 255, 1),
-                                  ),
-                        textColor:
-                            !BlocProvider.of<SignupLoginScreenCubit>(context)
-                                    .changed
-                                ? const Color(0xff6B7280)
-                                : Colors.white,
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            // TODO navigate to  home screen
-                            BlocProvider.of<SignupLoginScreenCubit>(context)
-                                .login(
-                                    email: emailController.text.trim(),
-                                    password: passwordController.text);
-                            // Navigator.pushAndRemoveUntil(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => const WorkTypeScreen(),
-                            //   ),
-                            //   (route) => false,
-                            // );
-                          }
-                        },
-                        text: 'Login');
+                      fontSize: 16,
+                      backgroundColor:
+                          !BlocProvider.of<SignupLoginScreenCubit>(context)
+                                  .changed
+                              ? const MaterialStatePropertyAll(
+                                  Color.fromRGBO(209, 213, 219, 1),
+                                )
+                              : const MaterialStatePropertyAll(
+                                  Color.fromRGBO(51, 102, 255, 1),
+                                ),
+                      textColor:
+                          !BlocProvider.of<SignupLoginScreenCubit>(context)
+                                  .changed
+                              ? const Color(0xff6B7280)
+                              : Colors.white,
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          BlocProvider.of<SignupLoginScreenCubit>(context)
+                              .login(
+                                  email: emailController.text.trim(),
+                                  password: passwordController.text);
+                        }
+                      },
+                      text: 'Login',
+                    );
                   },
                 ),
               ),

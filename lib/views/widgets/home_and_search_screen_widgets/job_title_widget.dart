@@ -46,19 +46,25 @@ class _JobTitleWidgetState extends State<JobTitleWidget> {
                         );
                 },
                 errorBuilder: (context, error, stackTrace) {
-                  return const Center(
-                    child: Icon(Icons.error),
-                  );
+                  return Image.asset(widget.jobModel.image);
                 },
               ),
             ),
             title: Text(
               widget.jobModel.name,
-              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 18,
+                color: Colors.black,
+              ),
             ),
             subtitle: Text(
               widget.jobModel.compName,
-              style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
+              style: const TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 12,
+                color: Color.fromRGBO(57, 83, 107, 1),
+              ),
             ),
             trailing: BlocConsumer<JobDataCubit, JobDataState>(
               listener: (context, state) {
@@ -97,7 +103,7 @@ class _JobTitleWidgetState extends State<JobTitleWidget> {
                   color:
                       widget.jobModel.isFavorite! ? Colors.blue : Colors.grey,
                   onPressed: () {
-                    !widget.jobModel.isFavorite!
+                    widget.jobModel.isFavorite!
                         ? BlocProvider.of<JobDataCubit>(context)
                             .saveJob(widget.jobModel)
                         : BlocProvider.of<JobDataCubit>(context)
@@ -114,7 +120,8 @@ class _JobTitleWidgetState extends State<JobTitleWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.all(5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: const Color.fromRGBO(214, 228, 255, 1),
@@ -132,7 +139,8 @@ class _JobTitleWidgetState extends State<JobTitleWidget> {
                 width: 20,
               ),
               Container(
-                padding: const EdgeInsets.all(5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: const Color.fromRGBO(214, 228, 255, 1),

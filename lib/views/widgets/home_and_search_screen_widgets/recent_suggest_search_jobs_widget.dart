@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:job_finder/controller/cubit/job_data_cubit/job_data_cubit.dart';
+import 'package:job_finder/views/screens/apply_job_screen/job_details_screen.dart';
 
 class RecentSuggestWidget extends StatelessWidget {
   const RecentSuggestWidget({
@@ -31,9 +34,16 @@ class RecentSuggestWidget extends StatelessWidget {
         InkWell(
           onTap: () {
             if (isRecent) {
-              // remove with current index
+              BlocProvider.of<JobDataCubit>(context).removeRecentSearch(index);
             } else {
-              // move to page popular with current index
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => JobDetailsScreen(
+                    jobModel: context.read<JobDataCubit>().recentJobs[index],
+                  ),
+                ),
+              );
             }
           },
           child: Icon(

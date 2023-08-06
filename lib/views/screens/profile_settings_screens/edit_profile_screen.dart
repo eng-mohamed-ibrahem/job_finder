@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
+import 'package:job_finder/controller/cubit/signup_screens_cubit/signup_login_screens_cubit.dart';
 import 'package:job_finder/views/widgets/onboarding_screen_widgets/custom_button.dart';
 
 import '../../../controller/cubit/edit_profile_screens_cubit/file_path_cubit.dart';
@@ -146,6 +147,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       CustomizedTextFormField(
                         controller: _bioController,
+                        maxLines: 5,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'please enter your bio';
@@ -262,30 +264,70 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 SizedBox(
                   width: double.infinity,
-                  child: CustomButton(
-                    fontSize: 16,
-                    onPressed: () {
-                      if (_phoneNumber == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Please enter a valid phone number',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
+                  child: BlocConsumer(listener: (context, state) {
+                    if (state is UpdateUserDataSuccessCubitState) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Your data has been updated successfully',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                        );
-                      }
-                      if (_formKey.currentState!.validate() &&
-                          _phoneNumber != null &&
-                          _phoneNumber!.isValidNumber()) {
-                        // TODO: Add to API
-                      }
-                    },
-                    text: 'Save',
-                  ),
+                        ),
+                      );
+                    }
+                    if (state is UpdateUserDataErrorCubitState) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Something went wrong, please try again later',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  }, builder: (context, state) {
+                    if (state is UpdateUserDataLoadingCubitState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return CustomButton(
+                      fontSize: 16,
+                      onPressed: () {
+                        if (_phoneNumber == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Please enter a valid phone number',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        if (_formKey.currentState!.validate() &&
+                            _phoneNumber != null &&
+                            _phoneNumber!.isValidNumber()) {
+                          BlocProvider.of<SignupLoginScreenCubit>(context)
+                              .updateUserData(
+                            name: _nameController.text,
+                            bio: _bioController.text,
+                            address: _addressController.text,
+                            mobile: _phoneNumber!.completeNumber,
+                          );
+                        }
+                      },
+                      text: 'Save',
+                    );
+                  }),
                 ),
               ],
             ),

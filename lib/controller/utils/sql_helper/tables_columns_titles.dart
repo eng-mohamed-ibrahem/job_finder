@@ -18,6 +18,8 @@ class UserTableColumnTitles {
   static const String login = 'login';
   static const String profileImage = 'profile_image';
   static const String mobile = 'mobile';
+  static const String bio = 'bio';
+  static const String address = 'address';
 }
 
 class SavedJobTableColumnTitles {

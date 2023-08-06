@@ -5,6 +5,7 @@ import 'package:job_finder/controller/cubit/navigation_screens_cubit/navigation_
 import 'package:job_finder/views/screens/home_screen_and_search/applied_screen.dart';
 import 'package:job_finder/views/screens/home_screen_and_search/messages_screen.dart';
 import 'package:job_finder/views/screens/home_screen_and_search/saved_screen.dart';
+
 import '../profile_settings_screens/profile_screen.dart';
 import 'home_screen.dart';
 

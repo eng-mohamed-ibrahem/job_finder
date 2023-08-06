@@ -20,15 +20,14 @@ class CustomButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        // minimumSize: const MaterialStatePropertyAll(
-        //   Size(double.infinity, 48),
-        // ),
         shape: MaterialStatePropertyAll(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
         ),
-        padding: const MaterialStatePropertyAll(EdgeInsets.all(20)),
+        padding: const MaterialStatePropertyAll(
+          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        ),
         textStyle: MaterialStatePropertyAll(
           TextStyle(color: Colors.white, fontSize: fontSize),
         ),

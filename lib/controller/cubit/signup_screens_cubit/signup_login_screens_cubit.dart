@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/controller/utils/dio_helper/dio_helper.dart';
+
 import '../../../model/signup_models/user_model.dart';
 import '../../utils/sql_helper/sql_helper.dart';
 
@@ -30,6 +31,7 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
   Future updateUserData({
     String? name,
     String? password,
+    String? email,
     String? mobile,
     String? bio,
     String? address,
@@ -53,12 +55,18 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
             if (response!.statusCode == 200) {
               userModel!.name = name!;
               await SqlHelper.updateData(queryStatement: ''' 
-            UPDATE ${UserTableColumnTitles.usersTable} SET ${UserTableColumnTitles.name} = '${userModel!.name}';
+                 UPDATE ${UserTableColumnTitles.usersTable} SET ${UserTableColumnTitles.name} = '${userModel!.name}';
             ''');
               emit(UpdateUserDataSuccessCubitState());
             }
           },
         );
+      }
+      if (email != null) {
+        await SqlHelper.insertData(queryStatement: ''' 
+            UPDATE ${UserTableColumnTitles.usersTable} SET ${UserTableColumnTitles.email} = '$email'; 
+            ''');
+        emit(UpdateUserDataSuccessCubitState());
       }
       if (mobile != null || bio != null || address != null) {
         await DioHelper.putData(
@@ -66,14 +74,14 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
             token: userModel!.token,
             queryParameters: {
               'mobile': mobile ?? userModel!.mobile,
-              'bio': bio,
-              'address': address,
+              'bio': bio ?? userModel!.bio,
+              'address': address ?? userModel!.address,
             }).then(
           (response) async {
             if (response!.statusCode == 200) {
               userModel!.mobile = mobile;
               await SqlHelper.updateData(queryStatement: ''' 
-            UPDATE ${UserTableColumnTitles.usersTable} SET ${UserTableColumnTitles.mobile} = '${userModel!.mobile}';
+            UPDATE ${UserTableColumnTitles.usersTable} SET ${UserTableColumnTitles.mobile} = '${userModel!.mobile}', ${UserTableColumnTitles.bio} = '${userModel!.bio}', ${UserTableColumnTitles.address} = '${userModel!.address}';
             ''');
               emit(UpdateUserDataSuccessCubitState());
             }
@@ -155,6 +163,9 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
   }
 
   Future<void> _inserData() async {
+    SqlHelper.deleteData(queryStatement: '''
+              DELETE FROM ${UserTableColumnTitles.usersTable};
+            ''');
     await SqlHelper.insertData(queryStatement: '''
               INSERT INTO ${UserTableColumnTitles.usersTable}
               (${UserTableColumnTitles.id}, ${UserTableColumnTitles.name}, ${UserTableColumnTitles.otp}, ${UserTableColumnTitles.email}, ${UserTableColumnTitles.createdAt}, ${UserTableColumnTitles.token}, ${UserTableColumnTitles.login})

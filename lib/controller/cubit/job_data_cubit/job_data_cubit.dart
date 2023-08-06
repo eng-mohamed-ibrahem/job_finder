@@ -1,8 +1,12 @@
 import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/controller/utils/dio_helper/dio_helper.dart';
+import 'package:job_finder/controller/utils/shared_helper.dart';
+
 import '../../../model/job_model/databse_job_model.dart';
 import '../../../model/job_model/job_model.dart';
 import '../../../model/signup_models/user_model.dart';
@@ -20,6 +24,45 @@ class JobDataCubit extends Cubit<JobDataState> {
   /// to save interaction with user
   List<DatabaseJobModel> savedJobs = [];
   List<DatabaseJobModel> appliedJobs = [];
+
+  List<String> recentSearch = [];
+
+  Future addRecentSearch(String searchName) async {
+    emit(RecentSearchLoading());
+    try {
+      recentSearch.add(searchName);
+      await SharedHelper.saveData(key: 'recent_search', value: recentSearch);
+      emit(RecentSearchSuccess());
+    } catch (e) {
+      debugPrint(e.toString());
+      emit(RecentSearchError());
+    }
+  }
+
+  Future removeRecentSearch(int index) async {
+    emit(RecentSearchLoading());
+    try {
+      recentSearch.removeAt(index);
+      await SharedHelper.saveData(key: 'recent_search', value: recentSearch);
+      emit(RecentSearchSuccess());
+    } catch (e) {
+      debugPrint(e.toString());
+      emit(RecentSearchError());
+    }
+  }
+
+  void getRecentSearch() {
+    emit(RecentSearchLoading());
+    try {
+      recentSearch = SharedHelper.getData(
+        key: 'recent_search',
+      ) as List<String>;
+      emit(RecentSearchSuccess());
+    } catch (e) {
+      debugPrint(e.toString());
+      emit(RecentSearchError());
+    }
+  }
 
   Future<void> getSuggestedJobData({required String token}) async {
     emit(SuggestJobDataLoading());
@@ -44,7 +87,7 @@ class JobDataCubit extends Cubit<JobDataState> {
     emit(RecentJobDataLoading());
     try {
       await rootBundle.loadString('assets/files/jobs.json').then((value) {
-        var list = jsonDecode(value) as List<Map<String, dynamic>>;
+        var list = jsonDecode(value);
         for (var element in list) {
           recentJobs.add(JobModel.fromMap(element));
         }
@@ -191,17 +234,12 @@ class JobDataCubit extends Cubit<JobDataState> {
 
   /// delete from realtime & database
 
-  Future<bool> deleteAppliedJob(JobModel job) async {
+  Future<bool> deleteAppliedJob(DatabaseJobModel job) async {
     emit(AppliedJobDataLoading());
     try {
       // delete from realtime list
       appliedJobs.remove(
-        DatabaseJobModel(
-          id: job.id,
-          name: job.name,
-          image: job.image,
-          compName: job.compName,
-        ),
+        job,
       );
       // delete from database
       await SqlHelper.deleteData(queryStatement: '''

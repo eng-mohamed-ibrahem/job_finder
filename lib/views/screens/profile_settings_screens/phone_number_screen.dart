@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
+
+import '../../../controller/cubit/signup_screens_cubit/signup_login_screens_cubit.dart';
 import '../../widgets/onboarding_screen_widgets/custom_button.dart';
 
 class PhoneNumberScreen extends StatefulWidget {
@@ -99,14 +102,13 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
             const Spacer(),
             SizedBox(
               width: double.infinity,
-              child: CustomButton(
-                fontSize: 16,
-                onPressed: () {
-                  if (_phoneNumber == null) {
+              child: BlocConsumer(
+                listener: (context, state) {
+                  if (state is UpdateUserDataSuccessCubitState) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text(
-                          'Please enter a valid phone number',
+                          'Phone number updated successfully',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -114,11 +116,52 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                         ),
                       ),
                     );
-                  } else if (_phoneNumber!.isValidNumber()) {
-                    // TODO: Add function to save the data
+                  }
+                  if (state is UpdateUserDataErrorCubitState) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Error while updating phone number',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    );
                   }
                 },
-                text: 'Save',
+                builder: (context, state) {
+                  if (state is UpdateUserDataLoadingCubitState) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return CustomButton(
+                    fontSize: 16,
+                    onPressed: () {
+                      if (_phoneNumber == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Please enter a phone number',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        );
+                      } else if (_phoneNumber!.isValidNumber()) {
+                        BlocProvider.of<SignupLoginScreenCubit>(context)
+                            .updateUserData(
+                          mobile: _phoneNumber!.completeNumber,
+                        );
+                      }
+                    },
+                    text: 'Save',
+                  );
+                },
               ),
             ),
           ],

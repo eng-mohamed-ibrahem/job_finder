@@ -19,47 +19,64 @@ class SqlHelper {
         0;
   }
 
-  static void init() async {
+  static Future init() async {
     // step 1: create database file
     databasePath = join(await getDatabasesPath(), 'job_finder.db');
     // step 2: open database and create table
-    await openDatabase(
+    sqlDb = await openDatabase(
       databasePath,
       version: 1,
-      onCreate: (db, version) {
-        sqlDb = db;
+      onCreate: (db, version) async {
         saveToShared();
-        db.execute(''' 
+
+        /// for users
+        await db.execute(''' 
         CREATE TABLE ${UserTableColumnTitles.usersTable}(
           ${UserTableColumnTitles.id} INTEGER PRIMARY KEY, ${UserTableColumnTitles.name} TEXT NOT NULL, ${UserTableColumnTitles.email} TEXT NOT NULL, 
           ${UserTableColumnTitles.otp} INTEGER NULL, ${UserTableColumnTitles.token} TEXT NOT NULL, ${UserTableColumnTitles.towStep} TEXT NULL, 
           ${UserTableColumnTitles.emailVerifiedAt} TEXT NULL, ${UserTableColumnTitles.createdAt} TEXT NULL,
           ${UserTableColumnTitles.updatedAt} TEXT NULL, ${UserTableColumnTitles.careerType} TEXT NULL, ${UserTableColumnTitles.workNature} TEXT NULL,
           ${UserTableColumnTitles.workLocations} TEXT NULL, ${UserTableColumnTitles.login} INTEGER NOT NULL,
-          ${UserTableColumnTitles.profileImage} TEXT NULL, ${UserTableColumnTitles.mobile} TEXT NULL
+          ${UserTableColumnTitles.profileImage} TEXT NULL, ${UserTableColumnTitles.mobile} TEXT NULL, ${UserTableColumnTitles.bio} TEXT NULL, ${UserTableColumnTitles.address} TEXT NULL
         );
-        ''');
 
-        /// for saved jobs
-        db.execute('''
-          CREATE TABLE ${SavedJobTableColumnTitles.jobTable} (
+        CREATE TABLE ${SavedJobTableColumnTitles.jobTable} (
             ${DatabseJobTableColumnTitles.jobId} INTEGER PRIMARY KEY,
             ${DatabseJobTableColumnTitles.name} TEXT NOT NULL,
             ${DatabseJobTableColumnTitles.image} TEXT NOT NULL,
             ${DatabseJobTableColumnTitles.compName} TEXT NOT NULL,
             ${SavedJobTableColumnTitles.createdAt} TEXT NOT NULL,
           );
-        ''');
 
-        /// for applied jobs
-        db.execute('''
-          CREATE TABLE ${AppliedJobTableColumnTitles.jobTable} (
+           CREATE TABLE ${AppliedJobTableColumnTitles.jobTable} (
             ${DatabseJobTableColumnTitles.jobId} INTEGER PRIMARY KEY,
             ${DatabseJobTableColumnTitles.name} TEXT NOT NULL,
             ${DatabseJobTableColumnTitles.image} TEXT NOT NULL,
             ${DatabseJobTableColumnTitles.compName} TEXT NOT NULL,
           );
+
         ''');
+
+        /// for saved jobs
+        // await db.execute('''
+        //   CREATE TABLE ${SavedJobTableColumnTitles.jobTable} (
+        //     ${DatabseJobTableColumnTitles.jobId} INTEGER PRIMARY KEY,
+        //     ${DatabseJobTableColumnTitles.name} TEXT NOT NULL,
+        //     ${DatabseJobTableColumnTitles.image} TEXT NOT NULL,
+        //     ${DatabseJobTableColumnTitles.compName} TEXT NOT NULL,
+        //     ${SavedJobTableColumnTitles.createdAt} TEXT NOT NULL,
+        //   );
+        // ''');
+
+        // /// for applied jobs
+        // await db.execute('''
+        //   CREATE TABLE ${AppliedJobTableColumnTitles.jobTable} (
+        //     ${DatabseJobTableColumnTitles.jobId} INTEGER PRIMARY KEY,
+        //     ${DatabseJobTableColumnTitles.name} TEXT NOT NULL,
+        //     ${DatabseJobTableColumnTitles.image} TEXT NOT NULL,
+        //     ${DatabseJobTableColumnTitles.compName} TEXT NOT NULL,
+        //   );
+        // ''');
       },
     );
   }
@@ -103,9 +120,7 @@ class SqlHelper {
   }
 
   /// ! ..................................................... ! ///
-
   /// CRUD operation as SQL statement
-  ///
   /// for people who are familiar with SQL
   static Future<int> insertData({required String queryStatement}) async {
     return await sqlDb.rawInsert(queryStatement);

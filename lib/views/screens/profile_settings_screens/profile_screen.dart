@@ -1,10 +1,13 @@
-import 'dart:developer';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:job_finder/controller/cubit/job_data_cubit/job_data_cubit.dart';
+import 'package:job_finder/controller/cubit/signup_screens_cubit/signup_login_screens_cubit.dart';
 import 'package:job_finder/views/screens/profile_settings_screens/login_security_screen.dart';
 import 'package:job_finder/views/screens/profile_settings_screens/set_language_screen.dart';
 import 'package:job_finder/views/screens/profile_settings_screens/set_notification_screen.dart';
+
 import '../../../controller/cubit/edit_profile_screens_cubit/file_path_cubit.dart';
 import '../../../controller/utils/app_images.dart';
 import 'add_portfolio_screen.dart';
@@ -35,12 +38,11 @@ class AnimateScrollExceedCubit extends Cubit<bool> {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController scrollController = ScrollController(initialScrollOffset: 0);
 
   @override
-  initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     scrollController.addListener(() {
       BlocProvider.of<AnimateScrollExceedCubit>(context).animateAppbar(
         scrollController.offset,
@@ -56,34 +58,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var user = BlocProvider.of<SignupLoginScreenCubit>(context).userModel!;
     return Scaffold(
-      key: scaffoldKey,
-      drawer: Drawer(
-        child: Column(
-          children: [
-            DrawerHeader(
-              child: Container(
-                color: Colors.blue[400],
-              ),
-            ),
-            ListTile(
-              onTap: () {},
-              leading: const Icon(Icons.person),
-              title: const Text('Profile'),
-            ),
-            ListTile(
-              onTap: () {},
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-            ),
-            ListTile(
-              onTap: () {},
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-            ),
-          ],
-        ),
-      ),
       body: SafeArea(
         top: true,
         bottom: false,
@@ -138,23 +114,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 45,
                 ),
-                const Column(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Rafif Dian Axelingga',
-                      style: TextStyle(
+                      user.name,
+                      style: const TextStyle(
                         color: Color(0xFF111827),
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     Text(
-                      'Senior UI/UX Designer',
-                      style: TextStyle(
+                      user.careerType.toString(),
+                      style: const TextStyle(
                         color: Color(0xFF6B7280),
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -168,13 +144,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Container(
                   padding: const EdgeInsets.all(5),
                   height: 70,
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Column(
                         children: [
-                          Text(
+                          const Text(
                             'Applied',
                             style: TextStyle(
                               color: Color(0xFF6B7280),
@@ -182,72 +158,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 4,
                           ),
                           Text(
-                            '46',
-                            style: TextStyle(
-                              color: Color(0xFF111827),
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                      VerticalDivider(
-                        indent: 5,
-                        endIndent: 5,
-                        width: 30,
-                        color: Color(0xffD1D5DB),
-                        thickness: 3,
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            'Reviewed',
-                            style: TextStyle(
-                              color: Color(0xFF6B7280),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            '23',
-                            style: TextStyle(
-                              color: Color(0xFF111827),
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                      VerticalDivider(
-                        indent: 5,
-                        endIndent: 5,
-                        width: 30,
-                        color: Color(0xffD1D5DB),
-                        thickness: 3,
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            'Contacted',
-                            style: TextStyle(
-                              color: Color(0xFF6B7280),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            '16',
-                            style: TextStyle(
+                            BlocProvider.of<JobDataCubit>(context)
+                                .appliedJobs
+                                .length
+                                .toString(),
+                            style: const TextStyle(
                               color: Color(0xFF111827),
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
@@ -276,7 +195,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          // TODO: Implement edit about functionality
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const EditProfileScreen(),
+                            ),
+                          );
                         },
                         child: const Text(
                           'Edit',
@@ -293,16 +217,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    'I\'m Rafif Dian Axelingga, I\'m UI/UX Designer, I have experience designing UI Design for approximately 1 year. I am currently joining the Vektora studio team based in Surakarta, Indonesia.I am a person who has a high spirit and likes to work to achieve what I dream of.',
-                    style: TextStyle(
-                      color: Color(0xFF6B7280),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: user.bio != null
+                      ? Text(
+                          user.bio!,
+                          style: const TextStyle(
+                            color: Color(0xFF6B7280),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        )
+                      : const Center(
+                          child: Text(
+                            'No bio added yet',
+                            style: TextStyle(
+                              color: Color(0xFF6B7280),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -540,7 +475,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               right: 20,
               child: BlocBuilder<AnimateScrollExceedCubit, bool>(
                   builder: (context, state) {
-                log('changed');
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   decoration: BoxDecoration(
@@ -553,16 +487,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Builder(
-                        builder: (context) {
-                          return IconButton(
-                              onPressed: () {
-                                // Scaffold.of(context).openDrawer();
-                                scaffoldKey.currentState!.openDrawer();
-                              },
-                              icon: const Icon(Icons.menu));
-                        },
-                      ),
                       const Text(
                         'Profile',
                         style: TextStyle(
