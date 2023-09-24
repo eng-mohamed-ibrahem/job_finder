@@ -29,6 +29,12 @@
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
+
+	<key>NSCameraUsageDescription</key>
+	<string>Job Finder needs access to the camera to take profile of the you.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Job Finder needs access to the photo library to select profile of the you.</string>
+
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>

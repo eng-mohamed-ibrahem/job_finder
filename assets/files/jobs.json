@@ -128,7 +128,7 @@
     {
         "id": 7,
         "name": "Flutter Developer",
-        "image": "public/image/1683470153.flutter.png",
+        "image": "assets/images/icons/discord_logo.png",
         "job_time_type": "Part time",
         "job_type": "Flutter Developer",
         "job_level": "junior",
@@ -149,7 +149,7 @@
     {
         "id": 8,
         "name": "Flutter Developer",
-        "image": "public/image/1683470153.flutter.png",
+        "image": "assets/images/icons/tv-box.png",
         "job_time_type": "Part time",
         "job_type": "Flutter Developer",
         "job_level": "junior",
@@ -170,7 +170,7 @@
     {
         "id": 9,
         "name": "Flutter Developer",
-        "image": "public/image/1683470153.flutter.png",
+        "image": "assets/images/icons/discord_logo.png",
         "job_time_type": "Part time",
         "job_type": "Flutter Developer",
         "job_level": "junior",

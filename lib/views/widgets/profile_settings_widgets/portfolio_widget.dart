@@ -5,8 +5,8 @@ import 'package:job_finder/controller/cubit/edit_profile_screens_cubit/file_path
 
 class PortfolioWidget extends StatefulWidget {
   final int index;
-  const PortfolioWidget({super.key, required this.index});
-
+  const PortfolioWidget({super.key, required this.index, this.onSelected});
+  final void Function()? onSelected;
   @override
   State<PortfolioWidget> createState() => _PortfolioWidgetState();
 }
@@ -22,9 +22,13 @@ class _PortfolioWidgetState extends State<PortfolioWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      clipBehavior: Clip.antiAlias,
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
-        color: const Color.fromRGBO(236, 242, 255, 1),
+        color: BlocProvider.of<FilePathCubit>(context).selectedFileIndex ==
+                widget.index
+            ? const Color.fromRGBO(214, 228, 255, 1)
+            : Colors.transparent,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: const Color.fromRGBO(209, 213, 219, 1),
@@ -33,7 +37,7 @@ class _PortfolioWidgetState extends State<PortfolioWidget> {
         ),
       ),
       child: ListTile(
-        leading: Image.asset('assets/icons/pdf_logo.png'),
+        leading: Image.asset('assets/images/icons/pdf_logo.png'),
         title: Text(
           files[widget.index].name,
           style: const TextStyle(
@@ -44,7 +48,7 @@ class _PortfolioWidgetState extends State<PortfolioWidget> {
         ),
         subtitle: BlocBuilder<FilePathCubit, FilePathCubitState>(
           buildWhen: (previous, current) {
-            if (current is PortfolioCubitState) {
+            if (current is SelectedFileSuccessCubitState) {
               return true;
             }
             return false;

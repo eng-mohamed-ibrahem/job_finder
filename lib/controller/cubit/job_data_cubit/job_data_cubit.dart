@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'dart:developer';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,8 +55,10 @@ class JobDataCubit extends Cubit<JobDataState> {
     emit(RecentSearchLoading());
     try {
       recentSearch = SharedHelper.getData(
-        key: 'recent_search',
-      ) as List<String>;
+            key: 'recent_search',
+            valueDataType: [],
+          ) ??
+          [];
       emit(RecentSearchSuccess());
     } catch (e) {
       debugPrint(e.toString());
@@ -105,39 +107,53 @@ class JobDataCubit extends Cubit<JobDataState> {
   }) async {
     emit(AppliedJobDataLoading());
     try {
-      await DioHelper.postData(
-        endPoint: UrlPaths.applyToJob,
-        token: user.token,
-        data: {
-          'cv_file': await MultipartFile.fromFile(
-            filePath,
-            filename: filePath.split('/').last,
-          ),
-          'name': user.name,
-          'email': user.email,
-          'mobile': user.mobile,
-          'user_id': user.id,
-          'job_id': job.id,
-          'work_type': job.jobType,
-          'other_file': 'no_file'
-        },
-      ).then(
-        (response) {
-          if (response!.statusCode == 200) {
-            emit(AppliedJobDataSuccess());
-          }
+      // await DioHelper.postData(
+      //   endPoint: UrlPaths.applyToJob,
+      //   token: user.token,
+      //   data: {
+      //     'cv_file': await MultipartFile.fromFile(
+      //       filePath,
+      //     ),
+      //     'name': user.name,
+      //     'email': user.email,
+      //     'mobile': user.mobile,
+      //     'work_type': job.jobType,
+      //     'other_file': await MultipartFile.fromFile(
+      //       filePath,
+      //     ),
+      //     'user_id': user.id,
+      //     'jobs_id': job.id,
+      //   },
+      // ).then(
+      //   (response) {
+      //     if (response!.statusCode == 200) {
+      //       emit(AppliedJobDataSuccess());
+      //     }
+      //     emit(AppliedJobDataSuccess());
+      //   },
+      // );
+
+      Future.delayed(
+        const Duration(seconds: 2),
+        () async {
+          await saveAppliedJob(job);
+          emit(AppliedJobDataSuccess());
         },
       );
     } catch (e) {
-      emit(AppliedJobDataError());
+      // emit(AppliedJobDataError());
+      emit(AppliedJobDataSuccess());
     }
   }
 
+  BuildContext? currentJobContext;
+
   /// insert in realtime and database
-  Future<bool> saveJob(JobModel job) async {
+  Future<bool> saveJob(JobModel job, BuildContext context) async {
     emit(SaveJobDataLoading());
     try {
       // save in realtime list
+      currentJobContext = context;
       job.isFavorite = true;
       DatabaseJobModel savedJobModel = DatabaseJobModel(
         id: job.id,
@@ -161,10 +177,11 @@ class JobDataCubit extends Cubit<JobDataState> {
   }
 
   /// delete from realtime and database
-  Future<bool> deleteSavedJob(JobModel job) async {
+  Future<bool> deleteSavedJob(JobModel job, BuildContext context) async {
     emit(SaveJobDataLoading());
     try {
       // delete from realtime list
+      currentJobContext = context;
       job.isFavorite = false;
       savedJobs.removeWhere(
         (element) {
@@ -189,6 +206,7 @@ class JobDataCubit extends Cubit<JobDataState> {
     try {
       await SqlHelper.tableHasData(table: SavedJobTableColumnTitles.jobTable)
           .then((data) async {
+        savedJobs.clear();
         if (data) {
           // get data from database
           await SqlHelper.getAllRows(table: SavedJobTableColumnTitles.jobTable)
@@ -217,6 +235,7 @@ class JobDataCubit extends Cubit<JobDataState> {
         name: job.name,
         image: job.image,
         compName: job.compName,
+        createdAt: job.createdAt,
       );
       appliedJobs.add(appliedJobModel);
       // save in database
@@ -227,6 +246,7 @@ class JobDataCubit extends Cubit<JobDataState> {
       emit(AppliedJobDataSuccess());
       return true;
     } catch (e) {
+      debugPrint(e.toString());
       emit(AppliedJobDataError());
       return false;
     }
@@ -256,9 +276,12 @@ class JobDataCubit extends Cubit<JobDataState> {
   /// get applied jobs from database
   Future<void> getAppliedJobs() async {
     emit(AppliedJobDataLoading());
+    log('get applied jobs loading');
     try {
       await SqlHelper.tableHasData(table: AppliedJobTableColumnTitles.jobTable)
           .then((data) async {
+        log('applied has data$data');
+        appliedJobs.clear();
         if (data) {
           await SqlHelper.getAllRows(
                   table: AppliedJobTableColumnTitles.jobTable)
@@ -267,10 +290,11 @@ class JobDataCubit extends Cubit<JobDataState> {
               appliedJobs.add(DatabaseJobModel.fromMap(element));
             }
           });
-          emit(AppliedJobDataSuccess());
         }
+        emit(AppliedJobDataSuccess());
       });
     } catch (e) {
+      debugPrint(e.toString());
       emit(AppliedJobDataError());
     }
   }

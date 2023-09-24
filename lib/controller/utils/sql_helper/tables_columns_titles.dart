@@ -29,6 +29,7 @@ class SavedJobTableColumnTitles {
 
 class AppliedJobTableColumnTitles {
   static const String jobTable = 'applied_job';
+  static String createdAt = 'created_at';
 }
 
 class DatabseJobTableColumnTitles {

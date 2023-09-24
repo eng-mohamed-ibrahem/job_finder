@@ -68,6 +68,9 @@ class _LoginAndSecurityScreenState extends State<LoginAndSecurityScreen> {
                       Expanded(
                         child: Text(
                           'Email address',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                       Text(''),
@@ -98,6 +101,9 @@ class _LoginAndSecurityScreenState extends State<LoginAndSecurityScreen> {
                       Expanded(
                         child: Text(
                           'Phone number',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                       Text(''),
@@ -128,6 +134,9 @@ class _LoginAndSecurityScreenState extends State<LoginAndSecurityScreen> {
                       Expanded(
                         child: Text(
                           'Change password',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                       Text(''),
@@ -153,6 +162,9 @@ class _LoginAndSecurityScreenState extends State<LoginAndSecurityScreen> {
                       Expanded(
                         child: Text(
                           'Two-Step verification',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                       Text(
@@ -183,6 +195,9 @@ class _LoginAndSecurityScreenState extends State<LoginAndSecurityScreen> {
                       Expanded(
                         child: Text(
                           'Face ID',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                       Text(''),

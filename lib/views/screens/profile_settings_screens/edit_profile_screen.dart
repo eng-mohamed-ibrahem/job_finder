@@ -120,6 +120,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       CustomizedTextFormField(
                         controller: _nameController,
+                        textInputAction: TextInputAction.next,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Please enter your name';
@@ -147,6 +148,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       CustomizedTextFormField(
                         controller: _bioController,
+                        textInputAction: TextInputAction.newline,
                         maxLines: 5,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -175,6 +177,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       CustomizedTextFormField(
                         controller: _addressController,
+                        textInputAction: TextInputAction.next,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Please enter your address';
@@ -202,6 +205,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       IntlPhoneField(
                         controller: _phoneController,
+                        textInputAction: TextInputAction.done,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
@@ -264,8 +268,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 SizedBox(
                   width: double.infinity,
-                  child: BlocConsumer(listener: (context, state) {
+                  child: BlocConsumer<SignupLoginScreenCubit, SignupCubitState>(
+                      listener: (context, state) {
                     if (state is UpdateUserDataSuccessCubitState) {
+                      Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
@@ -313,6 +319,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                           );
                         }
+
                         if (_formKey.currentState!.validate() &&
                             _phoneNumber != null &&
                             _phoneNumber!.isValidNumber()) {

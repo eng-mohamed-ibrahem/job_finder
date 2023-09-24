@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/controller/utils/dio_helper/dio_helper.dart';
@@ -46,48 +48,60 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
         if (password != null) {
           namePassword.putIfAbsent('password', () => password);
         }
-        await DioHelper.putData(
-          endPoint: UrlPaths.updateNPProfile,
-          token: userModel!.token,
-          data: namePassword,
-        ).then(
-          (response) async {
-            if (response!.statusCode == 200) {
-              userModel!.name = name!;
-              await SqlHelper.updateData(queryStatement: ''' 
+        userModel!.name = name!;
+        await SqlHelper.updateData(queryStatement: ''' 
                  UPDATE ${UserTableColumnTitles.usersTable} SET ${UserTableColumnTitles.name} = '${userModel!.name}';
             ''');
-              emit(UpdateUserDataSuccessCubitState());
-            }
-          },
-        );
+        // await DioHelper.putData(
+        //   endPoint: UrlPaths.updateNPProfile,
+        //   token: userModel!.token,
+        //   data: namePassword,
+        // ).then(
+        //   (response) async {
+        //     if (response!.statusCode == 200) {
+        //       userModel!.name = name!;
+        //       await SqlHelper.updateData(queryStatement: '''
+        //          UPDATE ${UserTableColumnTitles.usersTable} SET ${UserTableColumnTitles.name} = '${userModel!.name}';
+        //     ''');
+        //       emit(UpdateUserDataSuccessCubitState());
+        //     }
+        //   },
+        // );
       }
       if (email != null) {
         await SqlHelper.insertData(queryStatement: ''' 
             UPDATE ${UserTableColumnTitles.usersTable} SET ${UserTableColumnTitles.email} = '$email'; 
             ''');
-        emit(UpdateUserDataSuccessCubitState());
       }
       if (mobile != null || bio != null || address != null) {
-        await DioHelper.putData(
-            endPoint: '${UrlPaths.updateMBAProfile}${userModel!.id}',
-            token: userModel!.token,
-            queryParameters: {
-              'mobile': mobile ?? userModel!.mobile,
-              'bio': bio ?? userModel!.bio,
-              'address': address ?? userModel!.address,
-            }).then(
-          (response) async {
-            if (response!.statusCode == 200) {
-              userModel!.mobile = mobile;
-              await SqlHelper.updateData(queryStatement: ''' 
+        userModel!.mobile = mobile;
+        userModel!.bio = bio;
+        userModel!.address = address;
+        await SqlHelper.updateData(queryStatement: ''' 
             UPDATE ${UserTableColumnTitles.usersTable} SET ${UserTableColumnTitles.mobile} = '${userModel!.mobile}', ${UserTableColumnTitles.bio} = '${userModel!.bio}', ${UserTableColumnTitles.address} = '${userModel!.address}';
             ''');
-              emit(UpdateUserDataSuccessCubitState());
-            }
-          },
-        );
+
+        // await DioHelper.putData(
+        //     endPoint: '${UrlPaths.updateMBAProfile}${userModel!.id}',
+        //     token: userModel!.token,
+        //     queryParameters: {
+        //       'mobile': mobile ?? userModel!.mobile,
+        //       'bio': bio ?? userModel!.bio,
+        //       'address': address ?? userModel!.address,
+        //     }).then(
+        //   (response) async {
+        //     if (response!.statusCode == 200) {
+        //       userModel!.mobile = mobile;
+        //       await SqlHelper.updateData(queryStatement: '''
+        //     UPDATE ${UserTableColumnTitles.usersTable} SET ${UserTableColumnTitles.mobile} = '${userModel!.mobile}', ${UserTableColumnTitles.bio} = '${userModel!.bio}', ${UserTableColumnTitles.address} = '${userModel!.address}';
+        //     ''');
+        //       emit(UpdateUserDataSuccessCubitState());
+        //     }
+        //   },
+        // );
       }
+
+      emit(UpdateUserDataSuccessCubitState());
     } on Exception catch (e) {
       debugPrint('cubit-$e');
       emit(UpdateUserDataErrorCubitState());
@@ -105,32 +119,53 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
     try {
       await DioHelper.postData(
         endPoint: UrlPaths.register,
-        queryParameters: {
+        data: {
           'email': email,
           'password': password,
           'name': name,
         },
-      ).then((response) async {
-        if (response!.statusCode == 200) {
-          var collection = response.data['data'] as Map<String, dynamic>;
-          collection.putIfAbsent(
-              UserTableColumnTitles.token, () => response.data['token']);
-          collection[UserTableColumnTitles.login] = false;
-          userModel = UserModel.fromMap(collection);
-          await _inserData();
-          debugPrint(userModel.toString());
-          emit(SingupSuccessCubitState());
-        } else if (response.statusCode == 401) {
-          errorMessageWhileSignup = response.data['massege']['email'][0];
-          emit(SignupUnauthorizedCubitState());
-        } else {
-          emit(SingupErrorCubitState());
-        }
-      });
+      ).then(
+        (response) async {
+          log(response.runtimeType.toString());
+          if (response != null) {
+            if (response.statusCode == 200) {
+              var collection = <String, dynamic>{};
+              collection[UserTableColumnTitles.token] = response.data['token'];
+              collection[UserTableColumnTitles.login] = false;
+              collection.addAll(response.data['data'] as Map<String, dynamic>);
+              userModel = UserModel.fromMap(collection);
+              await _inserData();
+              debugPrint(userModel.toString());
+              emit(SingupSuccessCubitState());
+            } else if (response.statusCode == 401) {
+              errorMessageWhileSignup = response.data['massege']['email'][0];
+              emit(SignupUnauthorizedCubitState(
+                  errorMessage: errorMessageWhileSignup));
+            } else {
+              emit(SingupErrorCubitState());
+            }
+          }
+        },
+      );
     } catch (e) {
       debugPrint('cubit-$e');
-      emit(SingupErrorCubitState());
+      emit(SingupErrorCubitState(errorMessage: e.toString()));
     }
+  }
+
+  void logout() async {
+    emit(SingupLoadingCubitState());
+    await SqlHelper.deleteData(queryStatement: '''
+              DELETE FROM ${UserTableColumnTitles.usersTable};
+            ''');
+    await SqlHelper.deleteData(queryStatement: '''
+              DELETE FROM ${SavedJobTableColumnTitles.jobTable};
+            ''');
+    await SqlHelper.deleteData(queryStatement: '''
+              DELETE FROM ${AppliedJobTableColumnTitles.jobTable};
+            ''');
+    userModel = null;
+    emit(SingupSuccessCubitState());
   }
 
   void login({
@@ -144,28 +179,32 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
         'password': password,
       }).then((response) async {
         if (response!.statusCode == 200) {
-          var collection = response.data['data'] as Map<String, dynamic>;
+          var collection = response.data as Map;
           collection.putIfAbsent('token', () => response.data['token']);
           collection[UserTableColumnTitles.login] = true;
-          userModel = UserModel.fromMap(collection);
+          collection.addAll(response.data['user'] as Map);
+          userModel = UserModel.fromMap(collection as Map<String, dynamic>);
           await _inserData();
           emit(SingupSuccessCubitState());
         } else if (response.statusCode == 401) {
           errorMessageWhileSignup = response.data['massege'];
           emit(SignupUnauthorizedCubitState());
         } else {
+          log(response.statusCode.toString());
           emit(SingupErrorCubitState());
         }
       });
     } catch (e) {
+      debugPrint('cubit-$e');
       emit(SingupErrorCubitState());
+      rethrow;
     }
   }
 
   Future<void> _inserData() async {
-    SqlHelper.deleteData(queryStatement: '''
-              DELETE FROM ${UserTableColumnTitles.usersTable};
-            ''');
+    // await SqlHelper.deleteData(queryStatement: '''
+    //           DELETE FROM ${UserTableColumnTitles.usersTable};
+    //         ''');
     await SqlHelper.insertData(queryStatement: '''
               INSERT INTO ${UserTableColumnTitles.usersTable}
               (${UserTableColumnTitles.id}, ${UserTableColumnTitles.name}, ${UserTableColumnTitles.otp}, ${UserTableColumnTitles.email}, ${UserTableColumnTitles.createdAt}, ${UserTableColumnTitles.token}, ${UserTableColumnTitles.login})

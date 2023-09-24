@@ -60,6 +60,7 @@ class _AccountFinishedScreenState extends State<AccountFinishedScreen>
             ),
             const Text(
               'Your account has been set up!',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 24,
                 color: Color.fromRGBO(17, 24, 39, 1),
@@ -71,6 +72,7 @@ class _AccountFinishedScreenState extends State<AccountFinishedScreen>
             ),
             const Text(
               'We have customized feeds according to your preferences',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 14,

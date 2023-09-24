@@ -45,6 +45,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
             ),
             const Text(
               'You have not received any messages',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w500,
@@ -56,12 +57,12 @@ class _MessagesScreenState extends State<MessagesScreen> {
             ),
             const Text(
               'Once your application has reached the interview stage, you will get a message from the recruiter.',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: Color.fromRGBO(107, 114, 128, 1),
               ),
-              textAlign: TextAlign.center,
             ),
           ],
         ),

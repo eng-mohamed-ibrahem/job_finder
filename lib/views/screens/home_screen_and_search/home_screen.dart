@@ -65,80 +65,88 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 10,
             ),
-            SuggestHeadlineJob(
+            const SuggestHeadlineJob(
               text: 'Suggested Job',
-              onPressed: () {},
+              onPressed: null,
             ),
             const SizedBox(
-              height: 10,
+              height: 15,
             ),
             BlocBuilder<JobDataCubit, JobDataState>(
               buildWhen: (previous, current) {
                 if (current is RecentJobDataSuccess ||
                     current is RecentJobDataError ||
-                    current is RecentJobDataLoading) {
+                    current is RecentJobDataLoading ||
+                    current is SuggestJobDataSuccess ||
+                    current is SuggestJobDataError ||
+                    current is SuggestJobDataLoading) {
                   return true;
                 }
                 return false;
               },
               builder: (context, state) {
-                if (state is SuggestJobDataLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state is SuggestJobDataError) {
+                if (state is SuggestJobDataError ||
+                    state is RecentJobDataError) {
                   return const Center(
                     child: Text('Something Unexpected Happened!'),
                   );
                 }
-                var jobs = BlocProvider.of<JobDataCubit>(context).recentJobs;
-                return CarouselSlider.builder(
-                  itemCount: 3,
-                  itemBuilder: (context, index, realIndex) {
-                    return Container(
-                      margin: const EdgeInsets.all(5),
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(width: 1),
-                      ),
-                      child: Column(
-                        children: [
-                          JobTitleWidget(
-                            jobModel: jobs[index],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(jobs[index].salary),
-                              CustomButton(
-                                text: 'Apply Now',
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => JobDetailsScreen(
-                                        jobModel: jobs[index],
+                if (state is SuggestJobDataSuccess ||
+                    state is RecentJobDataSuccess) {
+                  var jobs = BlocProvider.of<JobDataCubit>(context).recentJobs;
+                  return CarouselSlider.builder(
+                    itemCount: 3,
+                    itemBuilder: (context, index, realIndex) {
+                      return Container(
+                        margin: const EdgeInsets.all(5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(width: 1),
+                        ),
+                        child: Column(
+                          children: [
+                            JobTitleWidget(
+                              jobModel: jobs[index],
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(jobs[index].salary),
+                                CustomButton(
+                                  text: 'Apply Now',
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => JobDetailsScreen(
+                                          jobModel: jobs[index],
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  options: CarouselOptions(
-                    enableInfiniteScroll: true,
-                    viewportFraction: .8,
-                    height: 230,
-                    reverse: true,
-                    scrollDirection: Axis.horizontal,
-                    padEnds: true,
-                  ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    options: CarouselOptions(
+                      enableInfiniteScroll: true,
+                      viewportFraction: .8,
+                      height: 230,
+                      reverse: true,
+                      scrollDirection: Axis.horizontal,
+                      padEnds: true,
+                    ),
+                  );
+                }
+
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
               },
             ),
@@ -155,9 +163,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               },
-            ),
-            const SizedBox(
-              height: 10,
             ),
             BlocConsumer<JobDataCubit, JobDataState>(
               listener: (context, state) {
@@ -189,31 +194,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 400,
                   child: ListView.builder(
                     shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: 3,
                     itemBuilder: (context, index) {
-                      return InkWell(
-                        /// handle this if tapped on save job button and trigger [JobDetailsScreen] instead
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => JobDetailsScreen(
-                                jobModel: jobs[index],
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(5),
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(width: 1),
-                          ),
-                          child: JobTitleWidget(
-                            jobModel: jobs[index],
-                          ),
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(width: 1),
+                        ),
+                        child: JobTitleWidget(
+                          jobModel: jobs[index],
                         ),
                       );
                     },

@@ -10,6 +10,12 @@ class SearchWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: searchController,
+      textInputAction: TextInputAction.search,
+      onFieldSubmitted: (value) {
+        if (value.isNotEmpty) {
+          onSearch!();
+        }
+      },
       decoration: InputDecoration(
         hintText: 'search...',
         contentPadding: const EdgeInsets.symmetric(horizontal: 10),

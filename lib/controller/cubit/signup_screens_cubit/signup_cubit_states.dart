@@ -14,9 +14,15 @@ class SingupLoadingCubitState extends SignupCubitState {}
 
 class SingupSuccessCubitState extends SignupCubitState {}
 
-class SignupUnauthorizedCubitState extends SignupCubitState {}
+class SignupUnauthorizedCubitState extends SignupCubitState {
+  String? errorMessage;
+  SignupUnauthorizedCubitState({this.errorMessage});
+}
 
-class SingupErrorCubitState extends SignupCubitState {}
+class SingupErrorCubitState extends SignupCubitState {
+  String? errorMessage;
+  SingupErrorCubitState({this.errorMessage});
+}
 
 class GetDataFromStorageLoadingCubitState extends SignupCubitState {}
 

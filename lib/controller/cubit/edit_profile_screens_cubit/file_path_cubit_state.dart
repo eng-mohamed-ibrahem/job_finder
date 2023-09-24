@@ -29,3 +29,12 @@ class PortfolioDownloadCubitErrorState extends FilePathCubitState {}
 // !----------------------------------------! //
 
 class SelectedFilePathCubitState extends FilePathCubitState {}
+
+class SelectFileCubitState extends FilePathCubitState {}
+
+// !-------------------------------------------!//
+class SelectedFileLoadingCubitState extends FilePathCubitState {}
+
+class SelectedFileSuccessCubitState extends FilePathCubitState {}
+
+class SelectedFileErrorCubitState extends FilePathCubitState {}

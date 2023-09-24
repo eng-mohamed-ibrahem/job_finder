@@ -14,6 +14,7 @@ class CustomizedTextFormField extends StatelessWidget {
   final int? maxLength;
   final int? maxLines;
   final void Function(String)? onChanged;
+  final TextInputAction? textInputAction;
 
   const CustomizedTextFormField({
     super.key,
@@ -30,6 +31,7 @@ class CustomizedTextFormField extends StatelessWidget {
     this.maxLines,
     this.onChanged,
     this.hintText = '',
+    this.textInputAction,
   });
 
   @override
@@ -44,6 +46,7 @@ class CustomizedTextFormField extends StatelessWidget {
       autofocus: autofocus ?? false,
       keyboardType: keyboardType,
       obscureText: obscureText ?? false,
+      textInputAction: textInputAction,
       style: const TextStyle(
         fontSize: 14,
         color: Color.fromRGBO(17, 24, 39, 1),

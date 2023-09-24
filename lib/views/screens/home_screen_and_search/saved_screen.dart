@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_finder/views/screens/apply_job_screen/job_details_screen.dart';
+
 import '../../../controller/cubit/job_data_cubit/job_data_cubit.dart';
 import '../../../controller/utils/app_images.dart';
+import '../../../model/job_model/job_model.dart';
 
 class SavedScreen extends StatefulWidget {
   const SavedScreen({super.key});
@@ -56,6 +58,7 @@ class _SavedScreenState extends State<SavedScreen> {
                     ),
                     const Text(
                       'Press the bookmark icon on the job you want to save.',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Color.fromRGBO(107, 114, 128, 1),
                         fontSize: 16,
@@ -119,14 +122,19 @@ class _SavedScreenState extends State<SavedScreen> {
                                   onPressed: () {
                                     showModalBottomSheet(
                                       context: context,
+                                      showDragHandle: true,
+                                      constraints: const BoxConstraints(
+                                        maxHeight: 350,
+                                      ),
                                       builder: (context) {
                                         return Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 5),
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: Colors.white,
                                           ),
-                                          height: 250,
                                           child: Column(
                                             children: [
                                               Container(
@@ -147,20 +155,25 @@ class _SavedScreenState extends State<SavedScreen> {
                                                   trailing: const Icon(
                                                       Icons.arrow_right),
                                                   onTap: () {
+                                                    Navigator.pop(context);
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) {
+                                                          JobModel savedJob = jobCubit
+                                                              .recentJobs
+                                                              .firstWhere((jobModel) =>
+                                                                  jobModel.id ==
+                                                                  jobCubit
+                                                                      .savedJobs[
+                                                                          index]
+                                                                      .id);
                                                           return JobDetailsScreen(
-                                                            jobModel: BlocProvider
-                                                                    .of<JobDataCubit>(
-                                                                        context)
-                                                                .recentJobs[index],
+                                                            jobModel: savedJob,
                                                           );
                                                         },
                                                       ),
                                                     );
-                                                    Navigator.pop(context);
                                                   },
                                                 ),
                                               ),
@@ -218,6 +231,7 @@ class _SavedScreenState extends State<SavedScreen> {
                                                                     index]
                                                                 .id,
                                                       ),
+                                                      context,
                                                     );
                                                     Navigator.pop(context);
                                                   },

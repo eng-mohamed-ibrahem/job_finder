@@ -102,7 +102,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
             const Spacer(),
             SizedBox(
               width: double.infinity,
-              child: BlocConsumer(
+              child: BlocConsumer<SignupLoginScreenCubit, SignupCubitState>(
                 listener: (context, state) {
                   if (state is UpdateUserDataSuccessCubitState) {
                     ScaffoldMessenger.of(context).showSnackBar(

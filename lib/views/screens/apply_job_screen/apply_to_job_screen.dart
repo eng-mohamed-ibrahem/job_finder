@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/controller/cubit/edit_profile_screens_cubit/file_path_cubit.dart';
@@ -19,6 +21,15 @@ class ApplyToJobScreen extends StatefulWidget {
 }
 
 class _ApplyToJobScreenState extends State<ApplyToJobScreen> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // BlocProvider.of<FilePathCubit>(context).getPortoflios(
+    //     userId: BlocProvider.of<SignupLoginScreenCubit>(context).userModel!.id,
+    //     token:
+    //         BlocProvider.of<SignupLoginScreenCubit>(context).userModel!.token);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,16 +147,18 @@ class _ApplyToJobScreenState extends State<ApplyToJobScreen> {
               height: 20,
             ),
             BlocBuilder<FilePathCubit, FilePathCubitState>(
-              buildWhen: (previous, current) {
-                if (current is PortfolioCubitState ||
-                    current is PortfolioDownloadCubitLoadingState ||
-                    current is PortfolioDownloadCubitCompleteState ||
-                    current is PortfolioDownloadCubitErrorState ||
-                    current is SelectedFilePathCubitState) {
-                  return true;
-                }
-                return false;
-              },
+              // buildWhen: (previous, current) {
+              //   if (current is PortfolioCubitState ||
+              //       current is PortfolioDownloadCubitLoadingState ||
+              //       current is PortfolioDownloadCubitCompleteState ||
+              //       current is PortfolioDownloadCubitErrorState ||
+              //       current is SelectedFileSuccessCubitState ||
+              //       current is SelectedFileLoadingCubitState ||
+              //       current is SelectedFilePathCubitState) {
+              //     return true;
+              //   }
+              //   return false;
+              // },
               builder: (context, state) {
                 if (state is PortfolioDownloadCubitLoadingState) {
                   return const Center(
@@ -153,10 +166,30 @@ class _ApplyToJobScreenState extends State<ApplyToJobScreen> {
                   );
                 }
                 if (state is PortfolioDownloadCubitErrorState) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Error while downloading file'),
-                    ),
+                  return Column(
+                    children: [
+                      const Text(
+                        'Error while downloading file',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          BlocProvider.of<FilePathCubit>(context).getPortoflios(
+                              userId: BlocProvider.of<SignupLoginScreenCubit>(
+                                      context)
+                                  .userModel!
+                                  .id,
+                              token: BlocProvider.of<SignupLoginScreenCubit>(
+                                      context)
+                                  .userModel!
+                                  .token);
+                        },
+                        child: const Text('try again'),
+                      ),
+                    ],
                   );
                 }
                 var files = BlocProvider.of<FilePathCubit>(context).files;
@@ -166,17 +199,16 @@ class _ApplyToJobScreenState extends State<ApplyToJobScreen> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child: InkWell(
+                        child: GestureDetector(
                           onTap: () {
                             BlocProvider.of<FilePathCubit>(context).selectFile =
                                 index;
                           },
                           child: Container(
-                            color: BlocProvider.of<FilePathCubit>(context)
-                                        .selectedFileIndex ==
-                                    index
-                                ? const Color.fromRGBO(214, 228, 255, 1)
-                                : Colors.transparent,
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                             child: PortfolioWidget(
                               index: index,
                             ),
@@ -193,7 +225,7 @@ class _ApplyToJobScreenState extends State<ApplyToJobScreen> {
             ),
             SizedBox(
               width: double.infinity,
-              child: BlocConsumer<FilePathCubit, FilePathCubitState>(
+              child: BlocConsumer<JobDataCubit, JobDataState>(
                 listener: (context, state) {
                   if (state is AppliedJobDataSuccess) {
                     Navigator.push(
@@ -219,10 +251,14 @@ class _ApplyToJobScreenState extends State<ApplyToJobScreen> {
                       child: CircularProgressIndicator(),
                     );
                   }
+                  log(BlocProvider.of<FilePathCubit>(context).files.toString());
                   return CustomButton(
                     fontSize: 16,
                     text: 'Sumbit',
                     onPressed: () {
+                      log(BlocProvider.of<FilePathCubit>(context)
+                          .files
+                          .toString());
                       var selectedFileIndex =
                           BlocProvider.of<FilePathCubit>(context)
                               .selectedFileIndex;
@@ -236,6 +272,7 @@ class _ApplyToJobScreenState extends State<ApplyToJobScreen> {
                           filePath: files[selectedFileIndex].path,
                         );
                       } else {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Please select file'),

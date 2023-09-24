@@ -5,7 +5,7 @@ import '../../controller/utils/sql_helper/sql_helper.dart';
 class UserModel {
   int id;
   String name;
-  int otp;
+  int? otp;
   String? towStep;
   String email;
   String? emailVerifiedAt;
@@ -66,7 +66,7 @@ class UserModel {
     return UserModel(
       id: map[UserTableColumnTitles.id] as int,
       name: map[UserTableColumnTitles.name] as String,
-      otp: map[UserTableColumnTitles.otp] as int,
+      otp: map[UserTableColumnTitles.otp] as int?,
       towStep: map[UserTableColumnTitles.towStep] != null
           ? map[UserTableColumnTitles.towStep] as String
           : null,

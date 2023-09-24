@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/controller/utils/enum_languages_names.dart';
+
 import '../../../controller/utils/app_images.dart';
 
 ///
@@ -23,8 +24,8 @@ class LanguageCubit extends Cubit<Languages> {
 
 class _SetLanguageScreenState extends State<SetLanguageScreen> {
   List<String> images = [
+    Assets.imagesIconsSaudiArabia,
     Assets.imagesIconsUnitedStates,
-    Assets.imagesIconsSaudiArabia
   ];
 
   @override
@@ -51,7 +52,12 @@ class _SetLanguageScreenState extends State<SetLanguageScreen> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     leading: Image.asset(images[index]),
-                    title: Text(Languages.values[index].name),
+                    title: Text(
+                      Languages.values[index].name,
+                      style: const TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
                     trailing: Radio(
                       value: Languages.values[index],
                       groupValue: BlocProvider.of<LanguageCubit>(context).state,

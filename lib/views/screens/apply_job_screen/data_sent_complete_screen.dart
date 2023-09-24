@@ -11,6 +11,7 @@ class DataSentSuccessfully extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           'Apply Job',
           style: TextStyle(
@@ -35,9 +36,10 @@ class DataSentSuccessfully extends StatelessWidget {
             ),
             const Text(
               'Your data has been successfully sent',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color.fromRGBO(17, 24, 39, 1),
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.w500,
               ),
             ),

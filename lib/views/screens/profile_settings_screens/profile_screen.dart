@@ -10,6 +10,7 @@ import 'package:job_finder/views/screens/profile_settings_screens/set_notificati
 
 import '../../../controller/cubit/edit_profile_screens_cubit/file_path_cubit.dart';
 import '../../../controller/utils/app_images.dart';
+import '../login_screens/login_screen.dart';
 import 'add_portfolio_screen.dart';
 import 'edit_profile_screen.dart';
 
@@ -114,29 +115,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 45,
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      user.name,
-                      style: const TextStyle(
-                        color: Color(0xFF111827),
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                BlocBuilder<SignupLoginScreenCubit, SignupCubitState>(
+                  builder: (context, state) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            user.name,
+                            style: const TextStyle(
+                              color: Color(0xFF111827),
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          Text(
+                            user.careerType.toString(),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Color(0xFF6B7280),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    Text(
-                      user.careerType.toString(),
-                      style: const TextStyle(
-                        color: Color(0xFF6B7280),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -217,27 +226,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: user.bio != null
-                      ? Text(
-                          user.bio!,
-                          style: const TextStyle(
-                            color: Color(0xFF6B7280),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        )
-                      : const Center(
-                          child: Text(
-                            'No bio added yet',
-                            style: TextStyle(
-                              color: Color(0xFF6B7280),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
+                BlocBuilder<SignupLoginScreenCubit, SignupCubitState>(
+                  builder: (context, state) {
+                    return Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: user.bio != null
+                          ? Text(
+                              user.bio!,
+                              style: const TextStyle(
+                                color: Color(0xFF6B7280),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            )
+                          : const Center(
+                              child: Text(
+                                'No bio added yet',
+                                style: TextStyle(
+                                  color: Color(0xFF6B7280),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -495,11 +508,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: Color.fromRGBO(17, 24, 39, 1),
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {
-                          // TODO: Implement logout functionality
+                      BlocConsumer<SignupLoginScreenCubit, SignupCubitState>(
+                        listener: (context, current) {
+                          if (current is SingupSuccessCubitState) {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginScreen(),
+                                ),
+                                (route) => false);
+                          }
                         },
-                        icon: const Icon(Icons.logout),
+                        builder: (context, state) {
+                          if (state is SingupLoadingCubitState) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          return IconButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    // iconPadding: const EdgeInsets.symmetric(
+                                    //     horizontal: 10),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 5),
+                                    title: const Text('Log Out'),
+                                    content: const Text(
+                                        'Are you sure to logout from your account'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Cancle'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          BlocProvider.of<
+                                                      SignupLoginScreenCubit>(
+                                                  context)
+                                              .logout();
+                                        },
+                                        child: const Text('Confirm'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            icon: const Icon(Icons.logout),
+                          );
+                        },
                       ),
                     ],
                   ),

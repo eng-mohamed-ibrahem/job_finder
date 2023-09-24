@@ -100,7 +100,11 @@ class _SetNotificationScreenState extends State<SetNotificationScreen> {
                       itemBuilder: (context, index) {
                         return ListTile(
                           title: Text(
-                              jobNotificationList[index].jobNotificationName),
+                            jobNotificationList[index].jobNotificationName,
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
                           trailing: Switch(
                             value: jobNotificationList[index].status,
                             onChanged: (value) {
@@ -147,8 +151,12 @@ class _SetNotificationScreenState extends State<SetNotificationScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return ListTile(
-                          title: Text(jobNotificationList[index + 5]
-                              .jobNotificationName),
+                          title: Text(
+                            jobNotificationList[index + 5].jobNotificationName,
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
                           trailing: Switch(
                             value: jobNotificationList[index + 5].status,
                             onChanged: (value) {

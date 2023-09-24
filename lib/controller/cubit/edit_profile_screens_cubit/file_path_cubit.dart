@@ -1,11 +1,13 @@
 import 'dart:core';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/controller/utils/dio_helper/dio_helper.dart';
 import 'package:job_finder/controller/utils/methods.dart';
+
 import '../../utils/sql_helper/sql_helper.dart';
 
 part 'file_path_cubit_state.dart';
@@ -66,13 +68,12 @@ class FilePathCubit extends Cubit<FilePathCubitState> {
   }) async {
     emit(PortfolioDownloadCubitLoadingState());
     try {
-      await DioHelper.getData(
-              endPoint: '${UrlPaths.uploadPortfolio}/$userId', token: token)
+      await DioHelper.getData(endPoint: UrlPaths.getPortfolios, token: token)
           .then((response) {
         if (response!.statusCode == 200) {
-          final data = response.data['data'] as List<Map>;
+          final data = response.data['data']['portfolio'] as List<dynamic>;
           files = List.generate(data.length, (index) {
-            return FileContent(path: data[index]['name']);
+            return FileContent(path: data[index]['image']);
           });
         }
       });
@@ -85,30 +86,29 @@ class FilePathCubit extends Cubit<FilePathCubitState> {
 
   Future<bool> _uploadPortfolio(
       {String? path, required String token, required int userId}) async {
-    emit(PortfolioUploadCubitLoadingState());
     try {
       await DioHelper.postData(
-        endPoint: '${UrlPaths.uploadPortfolio}/$userId',
+        endPoint: UrlPaths.uploadPortfolio,
         data: {
           'cv_file': await MultipartFile.fromFile(
             path!,
-            filename: path.split('/').last,
           ),
-          'name': path,
+          'image': await MultipartFile.fromFile(
+            path,
+          ),
         },
         token: token,
       );
-      emit(PortfolioUploadCubitCompleteState());
       return true;
     } catch (e) {
       debugPrint(e.toString());
-      emit(PortfolioUploadCubitErrorState());
       return false;
     }
   }
 
   void pickPortfolio({required String token, required int userId}) async {
     try {
+      emit(SelectedFileLoadingCubitState());
       String? path = await pickFile();
       if (path != null) {
         if (!files.any(
@@ -116,25 +116,26 @@ class FilePathCubit extends Cubit<FilePathCubitState> {
             return element.path == path;
           },
         )) {
+          files.add(FileContent(path: path));
+          emit(SelectedFileSuccessCubitState());
           await _uploadPortfolio(
             path: path,
             token: token,
             userId: userId,
-          ).then((uploaded) {
-            if (uploaded) {
-              files.add(FileContent(path: path));
-            }
-          });
-          emit(PortfolioCubitState());
+          );
         }
       }
     } on FileSystemException catch (e) {
+      emit(SelectedFileErrorCubitState());
       log(e.message);
     }
   }
 
   void removePdfFile(int index) {
     files.removeAt(index);
+    if (files.isEmpty) {
+      selectedFileIndex = -1;
+    }
     emit(PortfolioCubitState());
   }
 }

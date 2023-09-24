@@ -3,7 +3,6 @@ import 'package:job_finder/controller/utils/app_images.dart';
 import 'package:job_finder/views/widgets/onboarding_screen_widgets/custom_button.dart';
 
 import '../../../model/job_model/job_model.dart';
-import '../../screens/apply_job_screen/job_details_screen.dart';
 import 'job_title_widget.dart';
 
 class ResultOfSearchScreen extends StatefulWidget {
@@ -47,180 +46,211 @@ class _ResultOfSearchScreenState extends State<ResultOfSearchScreen> {
                           topRight: Radius.circular(20),
                         ),
                       ),
+                      showDragHandle: true,
+                      enableDrag: true,
+                      constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height * 0.4,
+                      ),
                       context: context,
                       builder: (context) {
-                        return Column(
-                          children: [
-                            SizedBox(
-                              height: 24,
-                              child: Row(
+                        return Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: StatefulBuilder(
+                            builder: (context, setState) {
+                              return Column(
                                 children: [
-                                  BackButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  const Center(
-                                    child: Text(
-                                      'Set Filter',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromRGBO(17, 24, 39, 1),
-                                      ),
+                                  SizedBox(
+                                    height: 24,
+                                    child: Row(
+                                      children: [
+                                        BackButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                        const Center(
+                                          child: Text(
+                                            'Set Filter',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w500,
+                                              color: Color.fromRGBO(17, 24, 39, 1),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                  ),
+                                  const SizedBox(
+                                    height: 40,
+                                  ),
+                                  Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          fullTimeTapped = !fullTimeTapped;
+                                          setFilter();
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 5,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: fullTimeTapped
+                                                  ? const Color(0xffE5E7EB)
+                                                  : const Color.fromRGBO(
+                                                      9, 26, 122, 1),
+                                            ),
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: const Text(
+                                            'Full Time',
+                                            style: TextStyle(
+                                              color:
+                                                  Color.fromRGBO(107, 114, 128, 1),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          partTimeTapped = !partTimeTapped;
+                                          setFilter();
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 5,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: !partTimeTapped
+                                                  ? const Color(0xffE5E7EB)
+                                                  : const Color.fromRGBO(
+                                                      9, 26, 122, 1),
+                                            ),
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Text(
+                                            'Part Time',
+                                            style: TextStyle(
+                                              color: partTimeTapped
+                                                  ? const Color.fromRGBO(
+                                                      107, 114, 128, 1)
+                                                  : const Color.fromRGBO(
+                                                      255, 255, 255, 1),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          seniorTapped = !seniorTapped;
+                                          setFilter();
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 5,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: !partTimeTapped
+                                                  ? const Color(0xffE5E7EB)
+                                                  : const Color.fromRGBO(
+                                                      9, 26, 122, 1),
+                                            ),
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Text(
+                                            'Senior Level',
+                                            style: TextStyle(
+                                              color: partTimeTapped
+                                                  ? const Color.fromRGBO(
+                                                      107, 114, 128, 1)
+                                                  : const Color.fromRGBO(
+                                                      255, 255, 255, 1),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          juniorTapped = !juniorTapped;
+                                          setFilter();
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 5,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: !partTimeTapped
+                                                  ? const Color(0xffE5E7EB)
+                                                  : const Color.fromRGBO(
+                                                      9, 26, 122, 1),
+                                            ),
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Text(
+                                            'Junior Level',
+                                            style: TextStyle(
+                                              color: partTimeTapped
+                                                  ? const Color.fromRGBO(
+                                                      107, 114, 128, 1)
+                                                  : const Color.fromRGBO(
+                                                      255, 255, 255, 1),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  Center(
+                                    child: CustomButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        setFilter();
+                                      },
+                                      text: 'Show result',
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
                                   ),
                                 ],
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 40,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    fullTimeTapped = !fullTimeTapped;
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: !partTimeTapped
-                                            ? const Color(0xffE5E7EB)
-                                            : const Color.fromRGBO(
-                                                9, 26, 122, 1),
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Text(
-                                      'Full Time',
-                                      style: TextStyle(
-                                        color: fullTimeTapped
-                                            ? const Color.fromRGBO(
-                                                107, 114, 128, 1)
-                                            : const Color.fromRGBO(
-                                                255, 255, 255, 1),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    partTimeTapped = !partTimeTapped;
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: !partTimeTapped
-                                            ? const Color(0xffE5E7EB)
-                                            : const Color.fromRGBO(
-                                                9, 26, 122, 1),
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Text(
-                                      'Part Time',
-                                      style: TextStyle(
-                                        color: partTimeTapped
-                                            ? const Color.fromRGBO(
-                                                107, 114, 128, 1)
-                                            : const Color.fromRGBO(
-                                                255, 255, 255, 1),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    seniorTapped = !seniorTapped;
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: !partTimeTapped
-                                            ? const Color(0xffE5E7EB)
-                                            : const Color.fromRGBO(
-                                                9, 26, 122, 1),
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Text(
-                                      'Senior Level',
-                                      style: TextStyle(
-                                        color: partTimeTapped
-                                            ? const Color.fromRGBO(
-                                                107, 114, 128, 1)
-                                            : const Color.fromRGBO(
-                                                255, 255, 255, 1),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    juniorTapped = !juniorTapped;
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: !partTimeTapped
-                                            ? const Color(0xffE5E7EB)
-                                            : const Color.fromRGBO(
-                                                9, 26, 122, 1),
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Text(
-                                      'Junior Level',
-                                      style: TextStyle(
-                                        color: partTimeTapped
-                                            ? const Color.fromRGBO(
-                                                107, 114, 128, 1)
-                                            : const Color.fromRGBO(
-                                                255, 255, 255, 1),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Spacer(),
-                            Center(
-                              child: CustomButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  setFilter();
-                                },
-                                text: 'Show result',
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
+                              );
+                            }
+                          ),
                         );
                       },
                     );
@@ -236,20 +266,22 @@ class _ResultOfSearchScreenState extends State<ResultOfSearchScreen> {
                     setFilter();
                   },
                   child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: !partTimeTapped
+                        color: !fullTimeTapped
                             ? const Color(0xffE5E7EB)
                             : const Color.fromRGBO(9, 26, 122, 1),
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Full Time',
                       style: TextStyle(
-                        color: fullTimeTapped
-                            ? const Color.fromRGBO(107, 114, 128, 1)
-                            : const Color.fromRGBO(255, 255, 255, 1),
+                        color: Color.fromRGBO(107, 114, 128, 1),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -265,6 +297,10 @@ class _ResultOfSearchScreenState extends State<ResultOfSearchScreen> {
                     setFilter();
                   },
                   child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: !partTimeTapped
@@ -273,12 +309,10 @@ class _ResultOfSearchScreenState extends State<ResultOfSearchScreen> {
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Part Time',
                       style: TextStyle(
-                        color: partTimeTapped
-                            ? const Color.fromRGBO(107, 114, 128, 1)
-                            : const Color.fromRGBO(255, 255, 255, 1),
+                        color: Color.fromRGBO(107, 114, 128, 1),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -300,7 +334,7 @@ class _ResultOfSearchScreenState extends State<ResultOfSearchScreen> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'Featuring ${widget.resultSearch.length}Jobs',
+                'Featuring ${widget.resultSearch.length} Jobs',
                 style: const TextStyle(
                   color: Color(0xFF111827),
                   fontSize: 14,
@@ -312,23 +346,10 @@ class _ResultOfSearchScreenState extends State<ResultOfSearchScreen> {
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
+              itemCount: resultFilterSearch.length,
               itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return JobDetailsScreen(
-                            jobModel: resultFilterSearch[index],
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  child: JobTitleWidget(
-                    jobModel: widget.resultSearch[index],
-                  ),
+                return JobTitleWidget(
+                  jobModel: widget.resultSearch[index],
                 );
               },
             ),

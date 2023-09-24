@@ -50,9 +50,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   .read<JobDataCubit>()
                   .recentJobs
                   .where(
-                    (element) => element.name.contains(
-                      _searchController.text,
-                    ),
+                    (element) => element.name.toLowerCase().contains(
+                          _searchController.text.trim().toLowerCase(),
+                        ),
                   )
                   .toList();
               context
@@ -88,6 +88,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         const Text(
                           'Try searching with different keywords so we can show you',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
@@ -156,10 +157,19 @@ class _SearchScreenState extends State<SearchScreen> {
                                   padding: const EdgeInsets.all(10),
                                   itemCount: recentSearch.length,
                                   itemBuilder: (context, index) {
-                                    return RecentSuggestWidget(
-                                      jobTitle: recentSearch[index],
-                                      isRecent: true,
-                                      index: index,
+                                    return Container(
+                                      margin: const EdgeInsets.only(
+                                        bottom: 10,
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 5,
+                                      ),
+                                      child: RecentSuggestWidget(
+                                        jobTitle: recentSearch[index],
+                                        isRecent: true,
+                                        index: index,
+                                      ),
                                     );
                                   },
                                 ),
@@ -192,13 +202,22 @@ class _SearchScreenState extends State<SearchScreen> {
                         itemCount: 3,
                         padding: const EdgeInsets.all(10),
                         itemBuilder: (context, index) {
-                          return RecentSuggestWidget(
-                            jobTitle: context
-                                .read<JobDataCubit>()
-                                .recentJobs[index]
-                                .name,
-                            isRecent: false,
-                            index: index,
+                          return Container(
+                            margin: const EdgeInsets.only(
+                              bottom: 10,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            child: RecentSuggestWidget(
+                              jobTitle: context
+                                  .read<JobDataCubit>()
+                                  .recentJobs[index]
+                                  .name,
+                              isRecent: false,
+                              index: index,
+                            ),
                           );
                         },
                       ),

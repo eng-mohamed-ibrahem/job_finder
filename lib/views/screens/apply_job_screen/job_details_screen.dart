@@ -1,6 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../controller/cubit/job_data_cubit/job_data_cubit.dart';
 import '../../../model/job_model/job_model.dart';
@@ -33,6 +34,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
+    log('${widget.jobModel.isFavorite!}');
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -44,17 +46,22 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
         centerTitle: true,
         actions: [
           IconButton(
-            color: widget.jobModel.isFavorite! ? Colors.blue : Colors.grey,
             onPressed: () {
               !widget.jobModel.isFavorite!
                   ? BlocProvider.of<JobDataCubit>(context)
-                      .saveJob(widget.jobModel)
+                      .deleteSavedJob(widget.jobModel, context)
                   : BlocProvider.of<JobDataCubit>(context)
-                      .deleteSavedJob(widget.jobModel);
+                      .saveJob(widget.jobModel, context);
             },
-            icon: const Icon(
-              FontAwesomeIcons.bookmark,
-            ),
+            icon: widget.jobModel.isFavorite!
+                ? const Icon(
+                    Icons.bookmark_outlined,
+                    color: Colors.blue,
+                  )
+                : const Icon(
+                    Icons.bookmark_outline,
+                    color: Colors.grey,
+                  ),
           ),
         ],
       ),
@@ -143,8 +150,10 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
                             ),
                           ]),
                         ),
+                        const SizedBox(height: 5),
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
                               padding: const EdgeInsets.all(5),
@@ -188,18 +197,18 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
                     height: 20,
                   ),
                   TabBar(
+                    automaticIndicatorColorAdjustment: true,
                     controller: tabController,
                     isScrollable: true,
+                    padding: const EdgeInsets.only(bottom: 5),
+                    dividerColor: Colors.transparent,
                     tabs: [
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          color: tabController.index == 0
-                              ? const Color.fromRGBO(9, 26, 122, 1)
-                              : const Color.fromRGBO(244, 244, 245, 1),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 25,
                             vertical: 10,
                           ),
@@ -207,9 +216,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
                             'Description',
                             style: TextStyle(
                               fontSize: 14,
-                              color: tabController.index == 0
-                                  ? const Color.fromRGBO(255, 255, 255, 1)
-                                  : const Color.fromRGBO(107, 114, 128, 1),
+                              color: Color.fromRGBO(107, 114, 128, 1),
                             ),
                           ),
                         ),
@@ -217,12 +224,9 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          color: tabController.index == 1
-                              ? const Color.fromRGBO(9, 26, 122, 1)
-                              : const Color.fromRGBO(244, 244, 245, 1),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 25,
                             vertical: 10,
                           ),
@@ -230,9 +234,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
                             'Company',
                             style: TextStyle(
                               fontSize: 14,
-                              color: tabController.index == 1
-                                  ? const Color.fromRGBO(255, 255, 255, 1)
-                                  : const Color.fromRGBO(107, 114, 128, 1),
+                              color: Color.fromRGBO(107, 114, 128, 1),
                             ),
                           ),
                         ),
@@ -241,179 +243,184 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.8,
-                    child: Expanded(
-                      child: TabBarView(
-                        controller: tabController,
-                        children: [
-                          /// first view of tab bar view
-                          Column(
-                            children: [
-                              const Text(
-                                'Job Description',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color.fromRGBO(17, 24, 39, 1),
-                                ),
+                    child: TabBarView(
+                      controller: tabController,
+                      physics: const BouncingScrollPhysics(),
+                      children: [
+                        /// first view of tab bar view
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Job Description',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromRGBO(17, 24, 39, 1),
                               ),
-                              const SizedBox(
-                                height: 10,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              widget.jobModel.jobDescription,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Color.fromRGBO(75, 85, 99, 1),
                               ),
-                              Text(
-                                widget.jobModel.jobDescription,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color.fromRGBO(75, 85, 99, 1),
-                                ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const Text(
+                              'Job Skills',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromRGBO(17, 24, 39, 1),
                               ),
-                              const SizedBox(
-                                height: 20,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              widget.jobModel.jobSkill,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Color.fromRGBO(75, 85, 99, 1),
                               ),
-                              const Text(
-                                'Job Skills',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color.fromRGBO(17, 24, 39, 1),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                widget.jobModel.jobSkill,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color.fromRGBO(75, 85, 99, 1),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
+                        ),
 
-                          /// second view of tab bar view
-                          Column(
-                            children: [
-                              const Text(
-                                'Contact Us',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color.fromRGBO(17, 24, 39, 1),
-                                ),
+                        /// second view of tab bar view
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Contact Us',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromRGBO(17, 24, 39, 1),
                               ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              SizedBox(
-                                height: 50,
-                                child: ListView(
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                          width: 1,
-                                          color: const Color.fromRGBO(
-                                              229, 231, 235, 1),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            SizedBox(
+                              height: 70,
+                              child: ListView(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5, vertical: 5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        width: 1,
+                                        color: const Color.fromRGBO(
+                                            229, 231, 235, 1),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        const Text(
+                                          'Email',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color:
+                                                Color.fromRGBO(75, 85, 99, 1),
+                                          ),
                                         ),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          const Text(
-                                            'Email',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                              color:
-                                                  Color.fromRGBO(75, 85, 99, 1),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            widget.jobModel.compEmail,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                              color:
-                                                  Color.fromRGBO(17, 24, 39, 1),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                          width: 1,
-                                          color: const Color.fromRGBO(
-                                              229, 231, 235, 1),
+                                        const SizedBox(
+                                          height: 5,
                                         ),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          const Text(
-                                            'Website',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                              color:
-                                                  Color.fromRGBO(75, 85, 99, 1),
-                                            ),
+                                        Text(
+                                          widget.jobModel.compEmail,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color:
+                                                Color.fromRGBO(17, 24, 39, 1),
                                           ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            widget.jobModel.compWebsite,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                              color:
-                                                  Color.fromRGBO(17, 24, 39, 1),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5, vertical: 5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        width: 1,
+                                        color: const Color.fromRGBO(
+                                            229, 231, 235, 1),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                    child: Column(
+                                      children: [
+                                        const Text(
+                                          'Website',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color:
+                                                Color.fromRGBO(75, 85, 99, 1),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          widget.jobModel.compWebsite,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color:
+                                                Color.fromRGBO(17, 24, 39, 1),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(
-                                height: 10,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text(
+                              'About Company',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromRGBO(17, 24, 39, 1),
                               ),
-                              const Text(
-                                'About Company',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color.fromRGBO(17, 24, 39, 1),
-                                ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              widget.jobModel.aboutComp,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Color.fromRGBO(75, 85, 99, 1),
                               ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                widget.jobModel.aboutComp,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color.fromRGBO(75, 85, 99, 1),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -421,8 +428,10 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
             ),
             Positioned(
               bottom: 20,
+              right: 20,
+              left: 20,
               child: SizedBox(
-                width: MediaQuery.of(context).size.width,
+                width: MediaQuery.sizeOf(context).width,
                 child: CustomButton(
                   fontSize: 16,
                   text: 'Apply',

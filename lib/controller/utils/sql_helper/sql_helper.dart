@@ -31,52 +31,16 @@ class SqlHelper {
 
         /// for users
         await db.execute(''' 
-        CREATE TABLE ${UserTableColumnTitles.usersTable}(
-          ${UserTableColumnTitles.id} INTEGER PRIMARY KEY, ${UserTableColumnTitles.name} TEXT NOT NULL, ${UserTableColumnTitles.email} TEXT NOT NULL, 
-          ${UserTableColumnTitles.otp} INTEGER NULL, ${UserTableColumnTitles.token} TEXT NOT NULL, ${UserTableColumnTitles.towStep} TEXT NULL, 
-          ${UserTableColumnTitles.emailVerifiedAt} TEXT NULL, ${UserTableColumnTitles.createdAt} TEXT NULL,
-          ${UserTableColumnTitles.updatedAt} TEXT NULL, ${UserTableColumnTitles.careerType} TEXT NULL, ${UserTableColumnTitles.workNature} TEXT NULL,
-          ${UserTableColumnTitles.workLocations} TEXT NULL, ${UserTableColumnTitles.login} INTEGER NOT NULL,
-          ${UserTableColumnTitles.profileImage} TEXT NULL, ${UserTableColumnTitles.mobile} TEXT NULL, ${UserTableColumnTitles.bio} TEXT NULL, ${UserTableColumnTitles.address} TEXT NULL
-        );
-
-        CREATE TABLE ${SavedJobTableColumnTitles.jobTable} (
-            ${DatabseJobTableColumnTitles.jobId} INTEGER PRIMARY KEY,
-            ${DatabseJobTableColumnTitles.name} TEXT NOT NULL,
-            ${DatabseJobTableColumnTitles.image} TEXT NOT NULL,
-            ${DatabseJobTableColumnTitles.compName} TEXT NOT NULL,
-            ${SavedJobTableColumnTitles.createdAt} TEXT NOT NULL,
-          );
-
-           CREATE TABLE ${AppliedJobTableColumnTitles.jobTable} (
-            ${DatabseJobTableColumnTitles.jobId} INTEGER PRIMARY KEY,
-            ${DatabseJobTableColumnTitles.name} TEXT NOT NULL,
-            ${DatabseJobTableColumnTitles.image} TEXT NOT NULL,
-            ${DatabseJobTableColumnTitles.compName} TEXT NOT NULL,
-          );
-
+        CREATE TABLE ${UserTableColumnTitles.usersTable}(${UserTableColumnTitles.id} INTEGER PRIMARY KEY, ${UserTableColumnTitles.name} TEXT NOT NULL, ${UserTableColumnTitles.email} TEXT NOT NULL,${UserTableColumnTitles.otp} INTEGER NULL, ${UserTableColumnTitles.token} TEXT NOT NULL, ${UserTableColumnTitles.towStep} TEXT NULL, ${UserTableColumnTitles.emailVerifiedAt} TEXT NULL, ${UserTableColumnTitles.createdAt} TEXT NULL, ${UserTableColumnTitles.updatedAt} TEXT NULL, ${UserTableColumnTitles.careerType} TEXT NULL, ${UserTableColumnTitles.workNature} TEXT NULL,${UserTableColumnTitles.workLocations} TEXT NULL, ${UserTableColumnTitles.login} INTEGER NOT NULL,${UserTableColumnTitles.profileImage} TEXT NULL, ${UserTableColumnTitles.mobile} TEXT NULL, ${UserTableColumnTitles.bio} TEXT NULL, ${UserTableColumnTitles.address} TEXT NULL );
         ''');
 
         /// for saved jobs
-        // await db.execute('''
-        //   CREATE TABLE ${SavedJobTableColumnTitles.jobTable} (
-        //     ${DatabseJobTableColumnTitles.jobId} INTEGER PRIMARY KEY,
-        //     ${DatabseJobTableColumnTitles.name} TEXT NOT NULL,
-        //     ${DatabseJobTableColumnTitles.image} TEXT NOT NULL,
-        //     ${DatabseJobTableColumnTitles.compName} TEXT NOT NULL,
-        //     ${SavedJobTableColumnTitles.createdAt} TEXT NOT NULL,
-        //   );
-        // ''');
+        await db.execute('''
+          CREATE TABLE ${SavedJobTableColumnTitles.jobTable} ( ${DatabseJobTableColumnTitles.jobId} INTEGER PRIMARY KEY, ${DatabseJobTableColumnTitles.name} TEXT NOT NULL,${DatabseJobTableColumnTitles.image} TEXT NOT NULL,${DatabseJobTableColumnTitles.compName} TEXT NOT NULL, ${SavedJobTableColumnTitles.createdAt} TEXT NOT NULL);''');
 
         // /// for applied jobs
-        // await db.execute('''
-        //   CREATE TABLE ${AppliedJobTableColumnTitles.jobTable} (
-        //     ${DatabseJobTableColumnTitles.jobId} INTEGER PRIMARY KEY,
-        //     ${DatabseJobTableColumnTitles.name} TEXT NOT NULL,
-        //     ${DatabseJobTableColumnTitles.image} TEXT NOT NULL,
-        //     ${DatabseJobTableColumnTitles.compName} TEXT NOT NULL,
-        //   );
-        // ''');
+        await db.execute('''
+          CREATE TABLE ${AppliedJobTableColumnTitles.jobTable} (${DatabseJobTableColumnTitles.jobId} INTEGER PRIMARY KEY,${DatabseJobTableColumnTitles.name} TEXT NOT NULL,${DatabseJobTableColumnTitles.image} TEXT NOT NULL,${DatabseJobTableColumnTitles.compName} TEXT NOT NULL, ${AppliedJobTableColumnTitles.createdAt} TEXT NOT NULL);''');
       },
     );
   }

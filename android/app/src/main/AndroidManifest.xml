@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     
+    <!-- it has to write it to run in release verison  -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <uses-permission android:name="android.permission.CAMERA"/>
 
     <!-- These permissions for Android 9 (API level 28) OR Lower To access all media files  -->

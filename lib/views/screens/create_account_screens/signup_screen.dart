@@ -5,6 +5,7 @@ import 'package:job_finder/controller/utils/app_images.dart';
 import 'package:job_finder/views/screens/create_account_screens/setup_work_type_screen.dart';
 import 'package:job_finder/views/screens/login_screens/login_screen.dart';
 import 'package:job_finder/views/widgets/onboarding_screen_widgets/custom_button.dart';
+
 import '../../../controller/utils/validation.dart';
 import '../../widgets/signup_screen_widget/customized_text_field.dart';
 
@@ -75,6 +76,7 @@ class _SignupScreenState extends State<SignupScreen> with RouteAware {
                 CustomizedTextFormField(
                   controller: usernameController,
                   hintText: "Username",
+                  textInputAction: TextInputAction.next,
                   prefixIcon: const Icon(
                     Icons.person_rounded,
                     color: Colors.black12,
@@ -95,6 +97,7 @@ class _SignupScreenState extends State<SignupScreen> with RouteAware {
                   controller: emailController,
                   validator: Validation.emailValidated,
                   hintText: "Email",
+                  textInputAction: TextInputAction.next,
                   prefixIcon: const Icon(
                     Icons.email,
                     color: Colors.black12,
@@ -123,6 +126,7 @@ class _SignupScreenState extends State<SignupScreen> with RouteAware {
                     validator: Validation.passwordValidated,
                     hintText: "Password",
                     helperText: "Password must be at least 8 characters",
+                    textInputAction: TextInputAction.done,
                     prefixIcon: const Icon(
                       Icons.lock_outline_rounded,
                       color: Colors.black12,
@@ -194,6 +198,7 @@ class _SignupScreenState extends State<SignupScreen> with RouteAware {
                   child: BlocConsumer<SignupLoginScreenCubit, SignupCubitState>(
                     listener: (context, state) {
                       if (state is SignupUnauthorizedCubitState) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
@@ -203,9 +208,12 @@ class _SignupScreenState extends State<SignupScreen> with RouteAware {
                         );
                       }
                       if (state is SingupErrorCubitState) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Something went wrong!'),
+                          SnackBar(
+                            content: state.errorMessage != null
+                                ? Text(state.errorMessage!)
+                                : const Text('Something went wrong!'),
                           ),
                         );
                       }
@@ -295,6 +303,13 @@ class _SignupScreenState extends State<SignupScreen> with RouteAware {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       GestureDetector(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('this feature under developement'),
+                            ),
+                          );
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -310,6 +325,13 @@ class _SignupScreenState extends State<SignupScreen> with RouteAware {
                         ),
                       ),
                       GestureDetector(
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('this feature under developement'),
+                            ),
+                          );
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),

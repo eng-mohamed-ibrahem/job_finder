@@ -25,6 +25,15 @@ class DatabaseJobModel {
     };
   }
 
+  Map<String, dynamic> toMapApplied() {
+    return <String, dynamic>{
+      DatabseJobTableColumnTitles.jobId: id,
+      DatabseJobTableColumnTitles.name: name,
+      DatabseJobTableColumnTitles.image: image,
+      DatabseJobTableColumnTitles.compName: compName,
+    };
+  }
+
   factory DatabaseJobModel.fromMap(Map<String, dynamic> map) {
     return DatabaseJobModel(
       id: map[DatabseJobTableColumnTitles.jobId] as int,

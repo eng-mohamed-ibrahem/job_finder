@@ -20,7 +20,10 @@ class RecentSuggestWidget extends StatelessWidget {
       children: [
         Icon(
           isRecent ? Icons.history : Icons.search_outlined,
-          size: 16,
+          size: 20,
+        ),
+        const SizedBox(
+          width: 5,
         ),
         Text(
           jobTitle,

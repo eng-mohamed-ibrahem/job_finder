@@ -126,12 +126,12 @@ class _AddPortfolioScreenState extends State<AddPortfolioScreen> {
               height: 20,
             ),
             BlocBuilder<FilePathCubit, FilePathCubitState>(
-              buildWhen: (previous, current) {
-                if (current is PortfolioCubitState) {
-                  return true;
-                }
-                return false;
-              },
+              // buildWhen: (previous, current) {
+              //   if (current is PortfolioCubitState) {
+              //     return true;
+              //   }
+              //   return false;
+              // },
               builder: (context, state) {
                 var files = BlocProvider.of<FilePathCubit>(context).files;
                 return Expanded(
