@@ -15,7 +15,7 @@ Overall, JobFinder is a comprehensive job search app that provides a one-stop-sh
 - flutter_bloc
 - image_picker
 - file_picker
-- ### permission_handler (have issues in running on ios verison be carefull when use it)
+- permission_handler (have issues in running on ios verison be carefull when use it)
 
 
 ## State Management: 
