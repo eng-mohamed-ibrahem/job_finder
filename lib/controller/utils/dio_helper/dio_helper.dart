@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
 part 'url_paths.dart';
 
 class DioHelper {
@@ -10,13 +11,13 @@ class DioHelper {
       BaseOptions(
         baseUrl: UrlPaths.baseUrl,
         receiveDataWhenStatusError: true,
-        // validateStatus: (status) {
-        //   if (status! < 500) {
-        //     return true;
-        //   } else {
-        //     return false;
-        //   }
-        // },
+        validateStatus: (status) {
+          if (status! < 500) {
+            return true;
+          } else {
+            return false;
+          }
+        },
       ),
     );
   }
@@ -41,20 +42,15 @@ class DioHelper {
     Map<String, dynamic>? data,
     String? token,
   }) async {
-    try {
-      if (token != null) {
-        dio.options.headers['Authorization'] = 'Bearer $token';
-      }
-      dio.options.headers['Content-Type'] = 'multipart/form-data';
-      return await dio.post(
-        endPoint,
-        queryParameters: queryParameters,
-        data: data != null ? FormData.fromMap(data) : null,
-      );
-    } catch (e) {
-      debugPrint('diohelper--$e');
-      return null;
+    if (token != null) {
+      dio.options.headers['Authorization'] = 'Bearer $token';
     }
+    dio.options.headers['Content-Type'] = 'multipart/form-data';
+    return await dio.post(
+      endPoint,
+      queryParameters: queryParameters,
+      data: data != null ? FormData.fromMap(data) : null,
+    );
   }
 
   static Future<Response?> putData({

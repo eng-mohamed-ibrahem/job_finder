@@ -358,6 +358,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               children: [
                 GestureDetector(
                   onTap: () {
+                    Navigator.pop(context);
                     BlocProvider.of<FilePathCubit>(context)
                         .setImageFromCamera();
                   },
@@ -373,6 +374,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
+                    Navigator.pop(context);
                     BlocProvider.of<FilePathCubit>(context)
                         .setImageFromGallery();
                   },

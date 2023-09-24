@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:job_finder/views/screens/home_screen_and_search/main_screen.dart';
@@ -235,7 +237,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         (route) => false,
                       );
                     }
+                    if (state is SignupUnauthorizedCubitState) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.errorMessage != null
+                              ? state.errorMessage!
+                              : 'Unauthorized'),
+                          padding: const EdgeInsets.all(10),
+                        ),
+                      );
+                    }
                     if (state is SingupErrorCubitState) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('something went wrong!'),
@@ -247,13 +261,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (current is ChangeButtonStyleCubitState ||
                         current is SingupLoadingCubitState ||
                         current is SingupSuccessCubitState ||
-                        current is SingupErrorCubitState) {
+                        current is SingupErrorCubitState ||
+                        current is SignupUnauthorizedCubitState) {
                       return true;
                     } else {
                       return false;
                     }
                   },
                   builder: (context, state) {
+                    log(state.toString());
                     if (state is SingupLoadingCubitState) {
                       return const Center(
                         child: CircularProgressIndicator(),

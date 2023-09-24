@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_finder/views/screens/apply_job_screen/job_details_screen.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../controller/cubit/job_data_cubit/job_data_cubit.dart';
 import '../../../controller/utils/app_images.dart';
@@ -195,8 +196,10 @@ class _SavedScreenState extends State<SavedScreen> {
                                                   title: const Text('Share'),
                                                   trailing: const Icon(
                                                       Icons.arrow_right),
-                                                  onTap: () {
+                                                  onTap: () async {
                                                     Navigator.pop(context);
+                                                    await Share.share(
+                                                        'developer: mohamed ibrahem & wtsapp: 01275314934');
                                                   },
                                                 ),
                                               ),

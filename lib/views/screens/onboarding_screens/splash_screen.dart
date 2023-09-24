@@ -31,12 +31,16 @@ class Splash extends StatelessWidget {
         // false = 0, true = 1;
         if (userMap[UserTableColumnTitles.login] == 1) {
           userMap[UserTableColumnTitles.login] = true;
-          userMap[UserTableColumnTitles.careerType] =
-              jsonDecode(userMap[UserTableColumnTitles.careerType])
-                  as List<dynamic>;
-          userMap[UserTableColumnTitles.workLocations] =
-              jsonDecode(userMap[UserTableColumnTitles.workLocations])
-                  as List<dynamic>;
+          if (userMap[UserTableColumnTitles.careerType] != null) {
+            userMap[UserTableColumnTitles.careerType] =
+                jsonDecode(userMap[UserTableColumnTitles.careerType])
+                    as List<dynamic>;
+          }
+          if (userMap[UserTableColumnTitles.workLocations] != null) {
+            userMap[UserTableColumnTitles.workLocations] =
+                jsonDecode(userMap[UserTableColumnTitles.workLocations])
+                    as List<dynamic>;
+          }
           if (context.mounted) {
             BlocProvider.of<JobDataCubit>(context).getRecentJobs();
 

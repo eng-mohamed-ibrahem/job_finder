@@ -127,23 +127,21 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
       ).then(
         (response) async {
           log(response.runtimeType.toString());
-          if (response != null) {
-            if (response.statusCode == 200) {
-              var collection = <String, dynamic>{};
-              collection[UserTableColumnTitles.token] = response.data['token'];
-              collection[UserTableColumnTitles.login] = false;
-              collection.addAll(response.data['data'] as Map<String, dynamic>);
-              userModel = UserModel.fromMap(collection);
-              await _inserData();
-              debugPrint(userModel.toString());
-              emit(SingupSuccessCubitState());
-            } else if (response.statusCode == 401) {
-              errorMessageWhileSignup = response.data['massege']['email'][0];
-              emit(SignupUnauthorizedCubitState(
-                  errorMessage: errorMessageWhileSignup));
-            } else {
-              emit(SingupErrorCubitState());
-            }
+          if (response!.statusCode == 200) {
+            var collection = <String, dynamic>{};
+            collection[UserTableColumnTitles.token] = response.data['token'];
+            collection[UserTableColumnTitles.login] = false;
+            collection.addAll(response.data['data'] as Map<String, dynamic>);
+            userModel = UserModel.fromMap(collection);
+            await _inserData();
+            debugPrint(userModel.toString());
+            emit(SingupSuccessCubitState());
+          } else if (response.statusCode == 401) {
+            errorMessageWhileSignup = response.data['massege']['email'][0];
+            emit(SignupUnauthorizedCubitState(
+                errorMessage: errorMessageWhileSignup));
+          } else {
+            emit(SingupErrorCubitState());
           }
         },
       );
@@ -174,26 +172,33 @@ class SignupLoginScreenCubit extends Cubit<SignupCubitState> {
   }) async {
     emit(SingupLoadingCubitState());
     try {
-      await DioHelper.postData(endPoint: UrlPaths.login, data: {
-        'email': email,
-        'password': password,
-      }).then((response) async {
-        if (response!.statusCode == 200) {
-          var collection = response.data as Map;
-          collection.putIfAbsent('token', () => response.data['token']);
-          collection[UserTableColumnTitles.login] = true;
-          collection.addAll(response.data['user'] as Map);
-          userModel = UserModel.fromMap(collection as Map<String, dynamic>);
-          await _inserData();
-          emit(SingupSuccessCubitState());
-        } else if (response.statusCode == 401) {
-          errorMessageWhileSignup = response.data['massege'];
-          emit(SignupUnauthorizedCubitState());
-        } else {
-          log(response.statusCode.toString());
-          emit(SingupErrorCubitState());
-        }
-      });
+      await DioHelper.postData(
+        endPoint: UrlPaths.login,
+        data: {
+          'email': email,
+          'password': password,
+        },
+      ).then(
+        (response) async {
+          if (response!.statusCode == 200) {
+            var collection = response.data as Map;
+            collection.putIfAbsent('token', () => response.data['token']);
+            collection[UserTableColumnTitles.login] = true;
+            collection.addAll(response.data['user'] as Map);
+            userModel = UserModel.fromMap(collection as Map<String, dynamic>);
+            await _inserData();
+            emit(SingupSuccessCubitState());
+          } else if (response.statusCode == 401) {
+            errorMessageWhileSignup = response.data['massage'];
+            log('unAuthorized - $errorMessageWhileSignup');
+            emit(SignupUnauthorizedCubitState(
+                errorMessage: errorMessageWhileSignup));
+          } else {
+            log(response.statusCode.toString());
+            emit(SingupErrorCubitState());
+          }
+        },
+      );
     } catch (e) {
       debugPrint('cubit-$e');
       emit(SingupErrorCubitState());
